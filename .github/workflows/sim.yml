@@ -1,0 +1,40 @@
+name: Simulation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  ROM_alone_sim:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Run ROM ALONE sim'
+        uses: docker://docker.io/ghdl/vunit:mcode-master
+        with:
+          args: ./sim/ROM/job_ROM_alone_sim.sh
+
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ROM_ALONE_SIM_FILES
+          path: |
+            ./wave_ROM_all_8.vcd
+            ./wave_ROM_all_16.vcd
+            ./wave_ROM_all_32.vcd
+            ./wave_ROM_partial_8.vcd
+            ./wave_ROM_partial_16.vcd
+            ./wave_ROM_partial_32.vcd
+            ./tb_ROM_all_8.csv
+            ./tb_ROM_all_16.csv
+            ./tb_ROM_all_32.csv
+            ./tb_ROM_partial_8.csv
+            ./tb_ROM_partial_16.csv
+            ./tb_ROM_partial_32.csv
+
