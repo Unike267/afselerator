@@ -141,18 +141,18 @@ architecture tb of tb_ROM is
 
 begin
 
-  ROM_0 : entity work.ROM
-                         generic map(
-                                     ROM_WIDTH     => ROM_WIDTH,
-                                     ROM_DEPTH     => ROM_DEPTH,
-                                     ROM_LOAD_FILE => ROM_LOAD_FILE
-                                    )
-                         port map   (
-                                     CLK  => clk,
-                                     ADDR => addr,
-                                     STB  => stb,
-                                     DOUT => dout
-                                    );
+  ROM_0 : entity MEM.ROM
+                        generic map(
+                                    ROM_WIDTH     => ROM_WIDTH,
+                                    ROM_DEPTH     => ROM_DEPTH,
+                                    ROM_LOAD_FILE => ROM_LOAD_FILE
+                                   )
+                        port    map(
+                                    CLK  => clk,
+                                    ADDR => addr,
+                                    STB  => stb,
+                                    DOUT => dout
+                                   );
 
   clk <= not clk after clk_period/2;
 
