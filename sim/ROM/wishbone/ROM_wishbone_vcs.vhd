@@ -24,7 +24,7 @@ entity ROM_wishbone_vcs is
   generic (
     bus_handle              : bus_master_t;
     strobe_high_probability : real range 0.0 to 1.0 := 1.0;
-    ROM_WIDTH               : natural; -- ROM_WIDTH= ROM data width
+    ROM_WIDTH               : natural; -- ROM_WIDTH = ROM data width
     ROM_DEPTH               : natural; -- ROM_DEPTH = Log2 of number of elements that the ROM has; Number of ROM elements has to be a power of two.
     ROM_LOAD_FILE           : string   -- ROM_LOAD_FILE = PATH of the LOAD FILE
   );
