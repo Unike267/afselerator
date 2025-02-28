@@ -116,7 +116,7 @@ architecture tb of tb_ROM_wishbone is
     (x"2710ba20")
   ); 
   
-  --type checker_t is array (0 to number_of_widths-1) of data_t;
+  -- Array to check ROM output
   type checker_t is array (0 to 3-1) of data_t;
   constant checker : checker_t := (
   test_data_8, test_data_16, test_data_32);
