@@ -168,7 +168,7 @@ begin
 
         wait for 15*clk_period;
         info(logger, "Init <partial test check>");
-        info(logger, "-------------------");
+        info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");
         info(logger, "ROM WIDTH: <" & to_string(ROM_WIDTH) & ">");
@@ -187,7 +187,7 @@ begin
 
         wait for 15*clk_period;
         info(logger, "Init <read all ROM>");
-        info(logger, "-------------------");
+        info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");
         info(logger, "ROM WIDTH: <" & to_string(ROM_WIDTH) & ">");
@@ -219,12 +219,12 @@ begin
         addr <= std_logic_vector(to_unsigned(addr_data(x), ROM_DEPTH));
         wait until  rising_edge(clk);
         wait until falling_edge(clk);
-        info(logger, "-------------------");
-        info(logger, "For address " & integer'image(addr_data(x)) & " <HEX " & to_hstring(std_logic_vector(to_unsigned(addr_data(x), ROM_DEPTH))) & ">:");
-        info(logger, "ROM HEX OUTPUT is: <" & to_hstring(dout(ROM_WIDTH-1 downto 0)) & "> and the data that should be given by the ROM is: <" & to_hstring(std_logic_vector(checker(y)(x)(2**(3+y)-1 downto 0))) & ">");
-        check_equal(dout,std_logic_vector(checker(y)(x)(2**(3+y)-1 downto 0)),"This is a failure!");
+        info(logger, "---------------------------------------------------");
+        info(logger, "For address    <0x" & to_hstring(to_unsigned(addr_data(x), ROM_DEPTH)) & ">:");
+        info(logger, "ROM OUTPUT is: <0x" & to_hstring(dout(ROM_WIDTH-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
+        check_equal(signed(dout),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
       end loop;
-      info(logger, "-------------------");
+      info(logger, "---------------------------------------------------");
       stb <= '0';    
       wait until rising_edge(clk);
       done <= true;
@@ -235,11 +235,11 @@ begin
         addr <= std_logic_vector(to_unsigned(x, ROM_DEPTH));
         wait until  rising_edge(clk);
         wait until falling_edge(clk);
-        info(logger, "-------------------");
-        info(logger, "For address " & integer'image(x) & " <HEX " & to_hstring(std_logic_vector(to_unsigned(x, ROM_DEPTH))) & ">:");
-        info(logger, "ROM HEX OUTPUT is: <" & to_hstring(dout(ROM_WIDTH-1 downto 0)) & ">");
+        info(logger, "---------------------------------------------------");
+        info(logger, "For address    <0x" & to_hstring(to_unsigned(x, ROM_DEPTH)) & ">:");
+        info(logger, "ROM OUTPUT is: <0x" & to_hstring(dout(ROM_WIDTH-1 downto 0)) & ">");
       end loop;
-      info(logger, "-------------------");
+      info(logger, "---------------------------------------------------");
       stb <= '0';    
       wait until rising_edge(clk);
       done <= true;
