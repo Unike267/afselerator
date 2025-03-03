@@ -245,7 +245,6 @@ begin
     else 
       for x in 0 to (2**ROM_DEPTH)-1 loop
         wait_until_idle(net, bus_handle);
-        info("pass 0x" &  to_hstring(addr_test_all));
         read_bus(net, bus_handle, addr_test_all, wishbone_res); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
         info(logger, "For address    <0x" & to_hstring(addr_test_all(ROM_DEPTH-1 downto 0))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_test_all) & ">"); 
