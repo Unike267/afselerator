@@ -40,11 +40,16 @@ end ROM_wishbone;
 
 architecture ROM_wishbone_RTL of ROM_wishbone is
 
+-- Define ROM constants:
+  constant base_addr   : std_logic_vector(31 downto 0) := x"90000000";
+  constant max_addr    : std_logic_vector(31 downto 0) := x"9" & std_logic_vector(to_unsigned(2**ROM_DEPTH-1,26)) & "00";
+
 -- Define ROM signals:
   signal addr          : std_logic_vector(ROM_DEPTH-1 downto 0) := (others => '0');
   signal dout          : std_logic_vector(ROM_WIDTH-1 downto 0) := (others => '0');
   signal stb           : std_logic                              :=            '0' ;
-  signal stall         : std_logic                              :=            '0' ; 
+  signal err           : std_logic                              :=            '0' ; 
+  signal read          : std_logic                              :=            '0' ; 
   signal transfer_out  : std_logic                              :=            '0' ; 
   signal output_window : std_logic                              :=            '0' ; 
 
@@ -63,24 +68,33 @@ begin
                                      DOUT => dout
                                     );
 
+-- The ROM will be memory mapped to NEORV32 at the base address defined at 0x90000000 
+-- The equivalent address increment is: One address in ROM for every 4 addresses in NEORV32 memory. 
+-- Thus, if the ROM has for example 1024 (FROM 000 to 3FF) items 
+-- It wil be memory mapped to NEORV32 from address 0x90000000 to address 0x90000FFC
+-- So the ROM has 26 addressable bits in the mapped memory, the addresses: 1001_XXXX_XXXX_XXXX_XXXX_XXXX_XXXX_XX00
+
+-- Manage read signal
+  -- Activated when a read request is made by wishbone master
+  read <= STB_i and CYC_i and not(WE_i);
+
 -- Manage error signal:
-  ERR_o <= '0'; -- Tie to zero if not explicitly used
+  -- Error when reading attempt occurs and address is misaligned or out of range.
+  err <= '1' when (read = '1') and (ADDR_i(1 downto 0) /= "00" or ADDR_i < base_addr or ADDR_i > max_addr) else '0';
+
+  ERR_o <= err;
 
 -- Manage strobe signal
-  stb   <= STB_i;
+  stb <= STB_i;
 
--- If the ROM has for example 1024 items (FROM 000 to 3FF) it will be
--- memory mapped to NEORV32 from address 0x90000000 to address 0x900003FF 
-
--- Manage stall signal, when the memory is out of range it stalls
-  stall   <= '0'  when ADDR_i >= x"90000000" and ADDR_i < x"90000400" else '1';
-  STALL_o <= stall;
+-- Manage stall signal
+  STALL_o <= '0';
 
 -- Manage addresses
-  addr    <= ADDR_i(ROM_DEPTH-1 downto 0);
+  addr <= ADDR_i(2+(ROM_DEPTH-1) downto 2);
 
 -- Manage the output transfer signal according to the criteria for the memory mapping 
-  transfer_out <= (STB_i and CYC_i and not(WE_i)) when not(stall) else '0';
+  transfer_out <= read and not(err);
 
 -- Manage output signal
 
@@ -110,9 +124,9 @@ begin
   Manage_output_window: process (clk_i) 
   begin
     if RSTN_i = '0' then
-      output_window   <= '0';
+      output_window <= '0';
     elsif rising_edge(clk_i) then
-      if transfer_out  = '1' then
+      if transfer_out = '1' then
         output_window <= '1';
       else
         output_window <= '0';
@@ -127,7 +141,7 @@ begin
     if RSTN_i  = '0' then
       ACK_o   <= '0';
     elsif rising_edge(clk_i) then
-      if transfer_out then
+      if transfer_out = '1' then
         ACK_o <= '1';
       else
         ACK_o <= '0';

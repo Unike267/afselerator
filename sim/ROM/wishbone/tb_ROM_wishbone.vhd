@@ -41,22 +41,23 @@ architecture tb of tb_ROM_wishbone is
   type addr_t is array (natural range <>) of std_logic_vector;
   -- ADDR data: this array contains the addresses to be checked.
   constant addr_data : addr_t (0 to test_partial_items-1)(31 downto 0)     := (
-    (x"90000000"), -- 0
-    (x"90000001"), -- 1
-    (x"90000002"), -- 2
-    (x"90000004"), -- 4
-    (x"90000008"), -- 8
-    (x"90000010"), -- 16
-    (x"90000020"), -- 32
-    (x"90000040"), -- 64
-    (x"90000080"), -- 128
-    (x"90000100"), -- 256
-    (x"90000200"), -- 512
-    (x"900003FF"), -- 1023
-    (x"90000016"), -- 22
-    (x"90000049"), -- 73
-    (x"9000024B"), -- 587
-    (x"9000029A")  -- 666
+    -- Memory mapped addr: | -- ROM addr:
+    (x"90000000"),                    -- 0
+    (x"90000004"),                    -- 1
+    (x"90000008"),                    -- 2
+    (x"90000010"),                    -- 4
+    (x"90000020"),                    -- 8
+    (x"90000040"),                    -- 16
+    (x"90000080"),                    -- 32
+    (x"90000100"),                    -- 64
+    (x"90000200"),                    -- 128
+    (x"90000400"),                    -- 256
+    (x"90000800"),                    -- 512
+    (x"90000FFC"),                    -- 1023
+    (x"90000058"),                    -- 22
+    (x"90000124"),                    -- 73
+    (x"9000092C"),                    -- 587
+    (x"90000A68")                     -- 666
   ); 
 
   type data_t is array (natural range <>) of signed;
@@ -249,7 +250,7 @@ begin
         info(logger, "---------------------------------------------------");
         info(logger, "For address    <0x" & to_hstring(addr_test_all(ROM_DEPTH-1 downto 0))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_test_all) & ">"); 
         info(logger, "ROM OUTPUT is: <0x" & to_hstring(wishbone_res(2**(3+y)-1 downto 0)) & ">");
-        addr_test_all := std_logic_vector(unsigned(addr_test_all) + 1);
+        addr_test_all := std_logic_vector(unsigned(addr_test_all) + 4);
       end loop;
       info(logger,   "---------------------------------------------------");
       wait until rising_edge(clk);
