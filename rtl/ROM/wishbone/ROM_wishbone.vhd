@@ -49,7 +49,7 @@ architecture ROM_wishbone_RTL of ROM_wishbone is
   signal dout          : std_logic_vector(ROM_WIDTH-1 downto 0) := (others => '0');
   signal stb           : std_logic                              :=            '0' ;
   signal err           : std_logic                              :=            '0' ; 
-  signal read          : std_logic                              :=            '0' ; 
+  signal wb_read          : std_logic                              :=            '0' ; 
   signal transfer_out  : std_logic                              :=            '0' ; 
   signal output_window : std_logic                              :=            '0' ; 
 
@@ -76,11 +76,11 @@ begin
 
 -- Manage read signal
   -- Activated when a read request is made by wishbone master
-  read <= STB_i and CYC_i and not(WE_i);
+  wb_read <= STB_i and CYC_i and not(WE_i);
 
 -- Manage error signal:
   -- Error when reading attempt occurs and address is misaligned or out of range.
-  err <= '1' when (read = '1') and (ADDR_i(1 downto 0) /= "00" or ADDR_i < base_addr or ADDR_i > max_addr) else '0';
+  err <= '1' when (wb_read = '1') and (ADDR_i(1 downto 0) /= "00" or ADDR_i < base_addr or ADDR_i > max_addr) else '0';
 
   ERR_o <= err;
 
@@ -94,7 +94,7 @@ begin
   addr <= ADDR_i(2+(ROM_DEPTH-1) downto 2);
 
 -- Manage the output transfer signal according to the criteria for the memory mapping 
-  transfer_out <= read and not(err);
+  transfer_out <= wb_read and not(err);
 
 -- Manage output signal
 
