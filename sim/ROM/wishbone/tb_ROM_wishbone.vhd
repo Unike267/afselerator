@@ -235,7 +235,7 @@ begin
         read_bus(net, bus_handle, addr_data(x), wishbone_res); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(addr_data(x)(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_data(x)) & ">");    
-        info(logger, "ROM OUTPUT is: <0x" & to_hstring(wishbone_res(2**(3+y)-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wishbone_res(2**(3+y)-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
         check_equal(signed(wishbone_res(2**(3+y)-1 downto 0)),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
@@ -248,7 +248,7 @@ begin
         read_bus(net, bus_handle, addr_test_all, wishbone_res); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(addr_test_all(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_test_all) & ">"); 
-        info(logger, "ROM OUTPUT is: <0x" & to_hstring(wishbone_res(2**(3+y)-1 downto 0)) & ">");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wishbone_res(2**(3+y)-1 downto 0)) & ">");
         addr_test_all := std_logic_vector(unsigned(addr_test_all) + 4);
       end loop;
       info(logger,   "---------------------------------------------------");
