@@ -48,10 +48,9 @@ architecture ROM_wishbone_RTL of ROM_wishbone is
   signal addr          : std_logic_vector(ROM_DEPTH-1 downto 0) := (others => '0');
   signal dout          : std_logic_vector(ROM_WIDTH-1 downto 0) := (others => '0');
   signal stb           : std_logic                              :=            '0' ;
-  signal err           : std_logic                              :=            '0' ; 
-  signal wb_read          : std_logic                              :=            '0' ; 
-  signal transfer_out  : std_logic                              :=            '0' ; 
-  signal output_window : std_logic                              :=            '0' ; 
+  signal wb_read       : boolean                                :=          false ;
+  signal err           : boolean                                :=          false ;
+  signal output_window : boolean                                :=          false ;
 
 begin
 
@@ -76,13 +75,15 @@ begin
 
 -- Manage read signal
   -- Activated when a read request is made by wishbone master
-  wb_read <= STB_i and CYC_i and not(WE_i);
+  wb_read <= ?? (STB_i and CYC_i and not(WE_i));
 
 -- Manage error signal:
   -- Error when reading attempt occurs and address is misaligned or out of range.
-  err <= '1' when (wb_read = '1') and (ADDR_i(1 downto 0) /= "00" or ADDR_i < base_addr or ADDR_i > max_addr) else '0';
+  err <= (wb_read) and (ADDR_i(1 downto 0) /= "00" or ADDR_i < base_addr or ADDR_i > max_addr);
 
-  ERR_o <= err;
+  with err           select
+  ERR_o <= '1' when   true,
+           '0' when others;
 
 -- Manage strobe signal
   stb <= STB_i;
@@ -93,60 +94,57 @@ begin
 -- Manage addresses
   addr <= ADDR_i(2+(ROM_DEPTH-1) downto 2);
 
--- Manage the output transfer signal according to the criteria for the memory mapping 
-  transfer_out <= wb_read and not(err);
-
 -- Manage output signal
 
   ROM_OUTPUT_8:
   if   ROM_WIDTH = 8             generate
   with output_window             select
-       DAT_o <= x"000000" & dout when    '1',
+       DAT_o <= x"000000" & dout when   true,
        (others => '0')           when others;
   end generate;
 
   ROM_OUTPUT_16:
   if   ROM_WIDTH = 16            generate
   with output_window             select
-       DAT_o <= x"0000"   & dout when    '1',
+       DAT_o <= x"0000"   & dout when   true,
        (others => '0')           when others;
   end generate;
 
   ROM_OUTPUT_32:
   if (ROM_WIDTH = 32)  generate
   with output_window   select
-       DAT_o <= dout   when    '1',
+       DAT_o <= dout   when   true,
        (others => '0') when others;
   end generate;
 
 -- Manage output window signal
 
-  Manage_output_window: process (clk_i) 
+  Manage_output_window: process (CLK_i) 
   begin
-    if RSTN_i = '0' then
-      output_window <= '0';
-    elsif rising_edge(clk_i) then
-      if transfer_out = '1' then
-        output_window <= '1';
+    if RSTN_i        = '0'     then
+      output_window <= false;
+    elsif rising_edge( CLK_i)  then
+      if wb_read and not(err)  then
+        output_window <=  true;
       else
-        output_window <= '0';
+        output_window <= false;
       end if;
     end if;
-  end process;
+  end process Manage_output_window;
 
 -- Manage ack signal
 
-  Manage_ack_signal: process (clk_i) 
+  Manage_ack_signal: process (CLK_i) 
   begin
-    if RSTN_i  = '0' then
+    if RSTN_i  = '0'          then
       ACK_o   <= '0';
-    elsif rising_edge(clk_i) then
-      if transfer_out = '1' then
+    elsif rising_edge( CLK_i) then
+      if wb_read and not(err) then
         ACK_o <= '1';
       else
         ACK_o <= '0';
       end if;
     end if;
-  end process;
+  end process   Manage_ack_signal;
                 
 end ROM_wishbone_RTL;
