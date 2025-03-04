@@ -81,9 +81,7 @@ begin
   -- Error when reading attempt occurs and address is misaligned or out of range.
   err <= (wb_read) and (ADDR_i(1 downto 0) /= "00" or ADDR_i < base_addr or ADDR_i > max_addr);
 
-  with err           select
-  ERR_o <= '1' when   true,
-           '0' when others;
+  ERR_o <= '1' when err else '0';
 
 -- Manage strobe signal
   stb <= STB_i;
@@ -97,24 +95,18 @@ begin
 -- Manage output signal
 
   ROM_OUTPUT_8:
-  if   ROM_WIDTH = 8             generate
-  with output_window             select
-       DAT_o <= x"000000" & dout when   true,
-       (others => '0')           when others;
+  if   ROM_WIDTH =  8 generate
+  DAT_o <= x"000000" & dout when output_window else (others => '0');
   end generate;
 
   ROM_OUTPUT_16:
-  if   ROM_WIDTH = 16            generate
-  with output_window             select
-       DAT_o <= x"0000"   & dout when   true,
-       (others => '0')           when others;
+  if   ROM_WIDTH = 16 generate
+  DAT_o <= x"0000"   & dout when output_window else (others => '0');
   end generate;
 
   ROM_OUTPUT_32:
-  if (ROM_WIDTH = 32)  generate
-  with output_window   select
-       DAT_o <= dout   when   true,
-       (others => '0') when others;
+  if (ROM_WIDTH = 32) generate
+  DAT_o <=             dout when output_window else (others => '0');
   end generate;
 
 -- Manage output window signal
