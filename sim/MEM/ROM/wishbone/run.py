@@ -95,14 +95,14 @@ ROOT = Path(__file__).parent
 
 MEM = vu.add_library("MEM")
 MEM.add_source_files([
-    ROOT /                        "tb_ROM_wishbone.vhd",
-    ROOT /                       "ROM_wishbone_vcs.vhd",
-    ROOT /           "../../../rtl/ROM/MEM_package.vhd",
-    ROOT /                   "../../../rtl/ROM/ROM.vhd",
-    ROOT / "../../../rtl/ROM/wishbone/ROM_wishbone.vhd",
+    ROOT /                               "tb_ROM_wishbone.vhd",
+    ROOT /                              "ROM_wishbone_vcs.vhd",
+    ROOT /               "../../../../rtl/MEM/MEM_package.vhd",
+    ROOT /                   "../../../../rtl/MEM/ROM/ROM.vhd",
+    ROOT / "../../../../rtl/MEM/ROM/wishbone/ROM_wishbone.vhd",
 ])
 
-ROM_PATH      = [str(ROOT)+"/../../../data/ROM-sim/"]
+ROM_PATH      = [str(ROOT)+"/../../../../data/ROM-sim/"]
 ROM_LOAD_FILE = ", ".join(map(str, ROM_PATH))
 testbench     = MEM.entity("tb_ROM_wishbone")
 partial_test  = testbench.test ("partial_test")
