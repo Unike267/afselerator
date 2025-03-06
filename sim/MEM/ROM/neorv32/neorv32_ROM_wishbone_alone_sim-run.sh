@@ -4,8 +4,7 @@ set -ex
 
 cd $(dirname "$0")
 
-mv partial_neorv32_application_image.vhd neorv32-setups/neorv32/rtl/core/neorv32_application_image.vhd
-cd sim/MEM/ROM/neorv32
+mv ../../../../partial_neorv32_application_image.vhd ../../../../neorv32-setups/neorv32/rtl/core/neorv32_application_image.vhd
 ./run.py -v MEM.tb_neorv32_rom_wishbone.8.partial_test  --gtkwave-fmt vcd
 ./run.py -v MEM.tb_neorv32_rom_wishbone.16.partial_test --gtkwave-fmt vcd
 ./run.py -v MEM.tb_neorv32_rom_wishbone.32.partial_test --gtkwave-fmt vcd

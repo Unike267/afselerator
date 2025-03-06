@@ -4,7 +4,9 @@ set -ex
 
 cd $(dirname "$0")
 
-cd neorv32-setups/neorv32/sw/example 
+pwd
+
+cd ../../../../neorv32-setups/neorv32/sw/example 
 mkdir rom-partial 
 mkdir rom-all 
 cp hello_world/makefile rom-partial/makefile 
