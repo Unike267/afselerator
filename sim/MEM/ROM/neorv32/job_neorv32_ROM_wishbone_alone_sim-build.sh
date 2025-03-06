@@ -4,8 +4,6 @@ set -ex
 
 cd $(dirname "$0")
 
-pwd
-
 cd ../../../../neorv32-setups/neorv32/sw/example 
 mkdir rom-partial 
 mkdir rom-all 

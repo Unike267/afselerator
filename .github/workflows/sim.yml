@@ -83,14 +83,14 @@ jobs:
       - name: 'Build software and run the simulations'
         run: |
           podman pull ghcr.io/stnolting/neorv32/sim:latest
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk stnolting/neorv32/sim:latest ./sim/MEM/ROM/neorv32/neorv32_ROM_wishbone_alone_sim-build.sh
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk stnolting/neorv32/sim:latest ./sim/MEM/ROM/neorv32/job_neorv32_ROM_wishbone_alone_sim-build.sh
           podman pull docker.io/ghdl/vunit:mcode-master
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/vunit:mcode-master ./sim/MEM/ROM/neorv32/neorv32_ROM_wishbone_alone_sim-run.sh
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/vunit:mcode-master ./sim/MEM/ROM/neorv32/job_neorv32_ROM_wishbone_alone_sim-run.sh
 
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: ROM_wishbone_ALONE_SIM_FILES
+          name: neorv32_ROM_wishbone_ALONE_SIM_FILES
           path: |
             ./wave_neorv32_ROM_wishbone_partial_8.vcd
             ./wave_neorv32_ROM_wishbone_partial_16.vcd
