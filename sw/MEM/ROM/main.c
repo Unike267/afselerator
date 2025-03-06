@@ -40,7 +40,7 @@ int main() {
   // Declaration of variables 
   // BASE address 0x90000000
   static uint32_t add   = 0x90000000;
-  // ROM Items (ROM depth)
+  // ROM Items (2**ROM depth)
   uint32_t items        =       1024;
   // Array to store data from the ROM
   uint32_t DATA[items];
@@ -91,7 +91,7 @@ int main() {
   // Force error to stop the test. It is trying to load an out of range data from address 0x90000FFD (if items are 1024 the maximum address is 0x90000FFC see ROM_wishbone.vhd file) so the err wishbone signal is going to activate.
     neorv32_cpu_load_unsigned_word(0x90001000);
   #else
-  int lat;
+  uint32_t lat;
   // Items to check
   uint32_t visual_items_check = 16;
   // Array of addresses to be checked 
@@ -107,7 +107,7 @@ int main() {
     DATA[i] = neorv32_cpu_load_unsigned_word(add);
     add = add + 4;
   }
-  lat = neorv32_cpu_csr_read(CSR_MCYCLE); 
+  lat = neorv32_cpu_csr_read(CSR_MCYCLE) - 1; 
 
   neorv32_uart0_printf("\nTo load the entire ROM (%u elements) %u cycles were required\n", items, lat);
   neorv32_uart0_printf("\nCheck these 16 data to verify the reading\n");
