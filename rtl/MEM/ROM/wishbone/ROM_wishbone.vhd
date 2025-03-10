@@ -28,7 +28,7 @@ port (
     ADDR_i  : in  std_logic_vector(31 downto 0); -- Wishbone address input
     --DAT_i   : in  std_logic_vector(31 downto 0); -- In the context of a ROM wishbone input data is not used
     DAT_o   : out std_logic_vector(31 downto 0); -- Wishbone data output 
-    WE_i    : in  std_logic;                     -- Wishbone write enable signal is not used
+    WE_i    : in  std_logic;                     -- Wishbone write enable signal
     SEL_i   : in  std_logic_vector(3 downto 0);  -- Wishbone select input signal
     STB_i   : in  std_logic;                     -- Wishbone strobe input signal
     ACK_o   : out std_logic;                     -- Wishbone acknowledge output signal
