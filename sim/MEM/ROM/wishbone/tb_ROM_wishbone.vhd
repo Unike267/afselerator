@@ -34,9 +34,10 @@ architecture tb of tb_ROM_wishbone is
   constant ROM_DEPTH          : natural             := 10; -- ROM SIZE = 2^ROM_DEPTH= 2^10 = 1024 elements  
 
 -- Define tb constants:
-  constant clk_period         : time    :=          10 ns;
-  constant all_items          : natural := (2**ROM_DEPTH);
-  constant test_partial_items : natural :=             16;
+  constant clk_period         : time                          :=          10 ns;
+  constant all_items          : natural                       := (2**ROM_DEPTH);
+  constant test_partial_items : natural                       :=             16;
+  constant base_addr          : std_logic_vector(31 downto 0) :=    x"90000000";
 
   type addr_t is array (natural range <>) of std_logic_vector;
   -- ADDR data: this array contains the addresses to be checked.
@@ -218,9 +219,9 @@ begin
   end process;
 
   test: process
-    variable y             :                       natural :=             0  ;   
-    variable wishbone_res  : std_logic_vector(31 downto 0) := (others => '0');
-    variable addr_test_all : std_logic_vector(31 downto 0) :=     x"90000000";
+    variable y       :                       natural :=             0  ;   
+    variable wb_dout : std_logic_vector(31 downto 0) := (others => '0');
+    variable wb_addr : std_logic_vector(31 downto 0) :=       base_addr;
   begin
     with ROM_WIDTH select
     y := 0  when  8,
@@ -232,11 +233,11 @@ begin
     if partial then
       for x in 0 to test_partial_items-1 loop
         wait_until_idle(net, bus_handle);
-        read_bus(net, bus_handle, addr_data(x), wishbone_res); -- Read from ROM memory mapped addresses
+        read_bus(net, bus_handle, addr_data(x), wb_dout); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(addr_data(x)(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_data(x)) & ">");    
-        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wishbone_res(2**(3+y)-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
-        check_equal(signed(wishbone_res(2**(3+y)-1 downto 0)),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_dout(2**(3+y)-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
+        check_equal(signed(wb_dout(2**(3+y)-1 downto 0)),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
       wait until rising_edge(clk);
@@ -245,11 +246,11 @@ begin
     else 
       for x in 0 to (2**ROM_DEPTH)-1 loop
         wait_until_idle(net, bus_handle);
-        read_bus(net, bus_handle, addr_test_all, wishbone_res); -- Read from ROM memory mapped addresses
+        read_bus(net, bus_handle, wb_addr, wb_dout); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
-        info(logger, "For ROM address <0x" & to_hstring(addr_test_all(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_test_all) & ">"); 
-        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wishbone_res(2**(3+y)-1 downto 0)) & ">");
-        addr_test_all := std_logic_vector(unsigned(addr_test_all) + 4);
+        info(logger, "For ROM address <0x" & to_hstring(wb_addr(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(wb_addr) & ">"); 
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_dout(2**(3+y)-1 downto 0)) & ">");
+        wb_addr := std_logic_vector(unsigned(wb_addr) + 4);
       end loop;
       info(logger,   "---------------------------------------------------");
       wait until rising_edge(clk);
