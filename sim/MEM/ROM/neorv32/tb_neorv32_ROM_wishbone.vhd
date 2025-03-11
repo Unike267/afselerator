@@ -37,11 +37,11 @@ architecture tb of tb_neorv32_ROM_wishbone is
   constant baud0_rate_c       : natural :=          19200;
   constant CLOCK_FREQUENCY    : natural :=      100000000;
 
-
 -- Define tb constants:
-  constant clk_period         : time    :=          10 ns;
-  constant all_items          : natural := (2**ROM_DEPTH);
-  constant test_partial_items : natural :=             16;
+  constant clk_period         : time                          :=          10 ns;
+  constant all_items          : natural                       := (2**ROM_DEPTH);
+  constant test_partial_items : natural                       :=             16;
+  constant base_addr          : std_logic_vector(31 downto 0) :=    x"90000000";
 
   type addr_t is array (natural range <>) of std_logic_vector;
   -- ADDR data: this array contains the addresses to be checked.
@@ -259,9 +259,8 @@ begin
   end process;
 
   test: process
-    variable y             :                       natural :=             0  ;   
-    variable wishbone_res  : std_logic_vector(31 downto 0) := (others => '0');
-    variable addr_test_all : std_logic_vector(31 downto 0) :=     x"90000000";
+    variable y       :                       natural :=             0  ;   
+    variable wb_addr : std_logic_vector(31 downto 0) :=       base_addr;
   begin
     with ROM_WIDTH select
     y := 0  when  8,
@@ -285,12 +284,12 @@ begin
       wait;
     else 
       for x in 0 to (2**ROM_DEPTH)-1 loop
-        wait until m_cyc = '1' and m_stb = '1' and m_we = '0' and rising_edge(clk);
+        wait until m_adr = wb_addr and m_cyc = '1' and m_stb = '1' and m_we = '0' and rising_edge(clk);
         info(logger, "---------------------------------------------------");
-        info(logger, "For ROM address <0x" & to_hstring(addr_test_all(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(m_adr) & ">"); 
+        info(logger, "For ROM address <0x" & to_hstring(wb_addr(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(m_adr) & ">"); 
         wait until m_ack = '1' and rising_edge(clk);  
         info(logger, "ROM OUTPUT is:  <0x" & to_hstring(m_din(2**(3+y)-1 downto 0)) & ">");
-        addr_test_all := std_logic_vector(unsigned(addr_test_all) + 4);
+        wb_addr := std_logic_vector(unsigned(wb_addr) + 4);
       end loop;
       wait until rising_edge(clk) and csr_we = '0' and csr_addr = x"B00" and csr_rdata /= x"00000000"; -- CSR MYCYCLE ADDR IS 0xB00
       info(logger, "---------------------------------------------------");
