@@ -36,9 +36,9 @@ architecture ROM_RTL of ROM is
   constant ROM_LOAD_FILE_16 : string := ROM_LOAD_FILE & "string_16.hex"; 
   constant ROM_LOAD_FILE_32 : string := ROM_LOAD_FILE & "string_32.hex"; 
 
-  constant ROM_8  : MEM8_t (0 to ( 2**ROM_DEPTH)-1) := MEM8_INIT_HEX (ROM_LOAD_FILE_8,  2**ROM_DEPTH);
-  constant ROM_16 : MEM16_t(0 to ( 2**ROM_DEPTH)-1) := MEM16_INIT_HEX(ROM_LOAD_FILE_16, 2**ROM_DEPTH);
-  constant ROM_32 : MEM32_t(0 to ( 2**ROM_DEPTH)-1) := MEM32_INIT_HEX(ROM_LOAD_FILE_32, 2**ROM_DEPTH);
+  constant ROM_8  : t_MEM8 (0 to ( 2**ROM_DEPTH)-1) := MEM8_INIT_HEX (ROM_LOAD_FILE_8,  2**ROM_DEPTH);
+  constant ROM_16 : t_MEM16(0 to ( 2**ROM_DEPTH)-1) := MEM16_INIT_HEX(ROM_LOAD_FILE_16, 2**ROM_DEPTH);
+  constant ROM_32 : t_MEM32(0 to ( 2**ROM_DEPTH)-1) := MEM32_INIT_HEX(ROM_LOAD_FILE_32, 2**ROM_DEPTH);
 
 begin
 
