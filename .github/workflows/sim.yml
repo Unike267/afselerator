@@ -102,3 +102,31 @@ jobs:
             ./tb_neorv32_ROM_wishbone_all_8.csv
             ./tb_neorv32_ROM_wishbone_all_16.csv
             ./tb_neorv32_ROM_wishbone_all_32.csv
+
+  RAM_alone_sim:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Run RAM ALONE sim'
+        uses: docker://docker.io/ghdl/vunit:mcode-master
+        with:
+          args: ./sim/MEM/RAM/job_RAM_alone_sim.sh
+
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: RAM_ALONE_SIM_FILES
+          path: |
+            ./wave_RAM_8.vcd
+            ./wave_RAM_16.vcd
+            ./wave_RAM_32.vcd
+            ./tb_RAM_8.csv
+            ./tb_RAM_16.csv
+            ./tb_RAM_32.csv
+            ./8_string.hex
+            ./16_string.hex
+            ./32_string.hex
