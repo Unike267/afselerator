@@ -220,7 +220,7 @@ begin
 
   test: process
     variable y       :                       natural :=             0  ;   
-    variable wb_dout : std_logic_vector(31 downto 0) := (others => '0');
+    variable wb_din  : std_logic_vector(31 downto 0) := (others => '0');
     variable wb_addr : std_logic_vector(31 downto 0) :=       base_addr;
   begin
     with ROM_WIDTH select
@@ -233,11 +233,11 @@ begin
     if partial then
       for x in 0 to test_partial_items-1 loop
         wait_until_idle(net, bus_handle);
-        read_bus(net, bus_handle, addr_data(x), wb_dout); -- Read from ROM memory mapped addresses
+        read_bus(net, bus_handle, addr_data(x), wb_din); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(addr_data(x)(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_data(x)) & ">");    
-        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_dout(2**(3+y)-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
-        check_equal(signed(wb_dout(2**(3+y)-1 downto 0)),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_din(ROM_WIDTH-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
+        check_equal(signed(wb_din(ROM_WIDTH-1 downto 0)),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
       wait until rising_edge(clk);
@@ -246,10 +246,10 @@ begin
     else 
       for x in 0 to (2**ROM_DEPTH)-1 loop
         wait_until_idle(net, bus_handle);
-        read_bus(net, bus_handle, wb_addr, wb_dout); -- Read from ROM memory mapped addresses
+        read_bus(net, bus_handle, wb_addr, wb_din); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(wb_addr(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(wb_addr) & ">"); 
-        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_dout(2**(3+y)-1 downto 0)) & ">");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_din(ROM_WIDTH-1 downto 0)) & ">");
         wb_addr := std_logic_vector(unsigned(wb_addr) + 4);
       end loop;
       info(logger,   "---------------------------------------------------");
