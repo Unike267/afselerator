@@ -30,7 +30,7 @@ entity ROM_wishbone_vcs is
   );
   port (
     CLK_i  : in  std_logic;  -- Clock
-    RSTN_i : in  std_ulogic -- Low-active async reset
+    RSTN_i : in  std_ulogic  -- Low-active async reset
   );
 end entity;
 
