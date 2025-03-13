@@ -236,8 +236,8 @@ begin
         read_bus(net, bus_handle, addr_data(x), wb_din); -- Read from ROM memory mapped addresses
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(addr_data(x)(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(addr_data(x)) & ">");    
-        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_din(ROM_WIDTH-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
-        check_equal(signed(wb_din(ROM_WIDTH-1 downto 0)),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(wb_din(ROM_WIDTH-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(ROM_WIDTH-1 downto 0)) & ">");
+        check_equal(signed(wb_din(ROM_WIDTH-1 downto 0)),checker(y)(x)(ROM_WIDTH-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
       wait until rising_edge(clk);

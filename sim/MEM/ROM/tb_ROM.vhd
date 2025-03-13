@@ -221,8 +221,8 @@ begin
         wait until falling_edge(clk);
         info(logger, "---------------------------------------------------");
         info(logger, "For address    <0x" & to_hstring(to_unsigned(addr_data(x), ROM_DEPTH)) & ">:");
-        info(logger, "ROM OUTPUT is: <0x" & to_hstring(dout(ROM_WIDTH-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
-        check_equal(signed(dout),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
+        info(logger, "ROM OUTPUT is: <0x" & to_hstring(dout(ROM_WIDTH-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(ROM_WIDTH-1 downto 0)) & ">");
+        check_equal(signed(dout),checker(y)(x)(ROM_WIDTH-1 downto 0),"This is a failure!");
       end loop;
       info(logger, "---------------------------------------------------");
       stb <= '0';    

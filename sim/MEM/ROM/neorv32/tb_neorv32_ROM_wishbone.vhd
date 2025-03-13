@@ -275,8 +275,8 @@ begin
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(addr_data(x)(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(m_adr) & ">");  
         wait until m_ack = '1' and rising_edge(clk);  
-        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(m_din(2**(3+y)-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(2**(3+y)-1 downto 0)) & ">");
-        check_equal(signed(m_din(2**(3+y)-1 downto 0)),checker(y)(x)(2**(3+y)-1 downto 0),"This is a failure!");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(m_din(ROM_WIDTH-1 downto 0)) & "> and it should match: <0x" & to_hstring(checker(y)(x)(ROM_WIDTH-1 downto 0)) & ">");
+        check_equal(signed(m_din(ROM_WIDTH-1 downto 0)),checker(y)(x)(ROM_WIDTH-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
       wait until m_err = '1' and rising_edge(clk); -- stop condition to finish test, see associated main.c
@@ -288,7 +288,7 @@ begin
         info(logger, "---------------------------------------------------");
         info(logger, "For ROM address <0x" & to_hstring(wb_addr(2+(ROM_DEPTH-1) downto 2))  & "> | MEMORY MAPPED <0x" & to_hstring(m_adr) & ">"); 
         wait until m_ack = '1' and rising_edge(clk);  
-        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(m_din(2**(3+y)-1 downto 0)) & ">");
+        info(logger, "ROM OUTPUT is:  <0x" & to_hstring(m_din(ROM_WIDTH-1 downto 0)) & ">");
         wb_addr := std_logic_vector(unsigned(wb_addr) + 4);
       end loop;
       wait until rising_edge(clk) and csr_we = '0' and csr_addr = x"B00" and csr_rdata /= x"00000000"; -- CSR MYCYCLE ADDR IS 0xB00
