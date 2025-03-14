@@ -159,7 +159,7 @@ begin
     end loop;
     wait until rising_edge(clk);
     info(logger, "--------------- store ---------------");
-    info(logger, "Store RAM in the file" & RAM_STORE_FILE);
+    info(logger, "Store RAM in the file " & RAM_STORE_FILE);
     with RAM_WIDTH select
     store <= MEM8_STORE_HEX( RAM_STORE_FILE_8, RAM_DEPTH,tmp_RAM_8 ) when  8,               
              MEM16_STORE_HEX(RAM_STORE_FILE_16,RAM_DEPTH,tmp_RAM_16) when 16,
