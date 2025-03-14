@@ -68,9 +68,9 @@ begin
                                     );
 
 -- The ROM will be memory mapped to NEORV32 at the base address defined at 0x90000000 
--- The equivalent address increment is: One address in ROM for every 4 addresses in NEORV32 memory. 
+-- The equivalent address increment is: One address in ROM for every 4 addresses in NEORV32 memory (i.e. access by word).
 -- Thus, if the ROM has for example 1024 (FROM 000 to 3FF) items 
--- It wil be memory mapped to NEORV32 from address 0x90000000 to address 0x90000FFC
+-- it wil be memory mapped to NEORV32 from address 0x90000000 to address 0x90000FFC
 -- So the ROM has 26 addressable bits in the mapped memory, the addresses: 1001_XXXX_XXXX_XXXX_XXXX_XXXX_XXXX_XX00
 
 -- Manage read signal
