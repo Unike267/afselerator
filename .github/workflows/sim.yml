@@ -130,3 +130,31 @@ jobs:
             ./8_string.hex
             ./16_string.hex
             ./32_string.hex
+
+  RAM_wishbone_alone_sim:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Run RAM wishbone ALONE sim'
+        uses: docker://docker.io/ghdl/vunit:mcode-master
+        with:
+          args: ./sim/MEM/RAM/wishbone/job_RAM_wishbone_alone_sim.sh
+
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: RAM_wishbone_ALONE_SIM_FILES
+          path: |
+            ./wave_RAM_wishbone_8.vcd
+            ./wave_RAM_wishbone_16.vcd
+            ./wave_RAM_wishbone_32.vcd
+            ./tb_RAM_wishbone_8.csv
+            ./tb_RAM_wishbone_16.csv
+            ./tb_RAM_wishbone_32.csv
+            ./8_string.hex
+            ./16_string.hex
+            ./32_string.hex
