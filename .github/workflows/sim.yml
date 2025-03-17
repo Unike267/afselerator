@@ -158,3 +158,36 @@ jobs:
             ./8_string.hex
             ./16_string.hex
             ./32_string.hex
+
+  neorv32_RAM_wishbone_alone_sim:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: 'Build software and run the simulations'
+        run: |
+          podman pull ghcr.io/stnolting/neorv32/sim:latest
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk stnolting/neorv32/sim:latest ./sim/MEM/RAM/neorv32/job_neorv32_RAM_wishbone_alone_sim-build.sh
+          podman pull docker.io/ghdl/vunit:mcode-master
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/vunit:mcode-master ./sim/MEM/RAM/neorv32/job_neorv32_RAM_wishbone_alone_sim-run.sh
+
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: neorv32_RAM_wishbone_ALONE_SIM_FILES
+          path: |
+            ./wave_neorv32_RAM_wishbone_8.vcd
+            ./wave_neorv32_RAM_wishbone_16.vcd
+            ./wave_neorv32_RAM_wishbone_32.vcd
+            ./tb_neorv32_RAM_wishbone_8.csv
+            ./tb_neorv32_RAM_wishbone_16.csv
+            ./tb_neorv32_RAM_wishbone_32.csv
+            ./8_string.hex
+            ./16_string.hex
+            ./32_string.hex
