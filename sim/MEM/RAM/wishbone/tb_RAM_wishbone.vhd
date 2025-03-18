@@ -97,7 +97,7 @@ begin
         rstn <= '0';
         wait for 15*clk_period;
         rstn <= '1';
-        info(logger, "Init <write/read ram>");
+        info(logger, "Init <RAM wishbone write/read all check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of STORED-RAM FILE: <" & RAM_STORE_FILE & ">");

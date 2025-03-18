@@ -88,7 +88,7 @@ begin
         show_all(logger, display_handler);
 
         wait for 15*clk_period;
-        info(logger, "Init <write/read ram>");
+        info(logger, "Init <RAM write/read all check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of STORED-RAM FILE: <" & RAM_STORE_FILE & ">");

@@ -220,7 +220,7 @@ begin
         rstn <= '0';
         wait for 15*clk_period;
         rstn <= '1';
-        info(logger, "Init <NEORV32 wishbone partial test check>");
+        info(logger, "Init <NEORV32 ROM wishbone partial test check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");
@@ -241,7 +241,7 @@ begin
         rstn <= '0';
         wait for 15*clk_period;
         rstn <= '1';
-        info(logger, "Init <NEORV32 wishbone read all ROM>");
+        info(logger, "Init <NEORV32 ROM wishbone read all check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");

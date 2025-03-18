@@ -180,7 +180,7 @@ begin
         rstn <= '0';
         wait for 15*clk_period;
         rstn <= '1';
-        info(logger, "Init <wishbone partial test check>");
+        info(logger, "Init <ROM wishbone partial test check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");
@@ -201,7 +201,7 @@ begin
         rstn <= '0';
         wait for 15*clk_period;
         rstn <= '1';
-        info(logger, "Init <wishbone read all ROM>");
+        info(logger, "Init <ROM wishbone read all check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");

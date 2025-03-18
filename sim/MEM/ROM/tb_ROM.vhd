@@ -167,7 +167,7 @@ begin
         show_all(logger, display_handler);
 
         wait for 15*clk_period;
-        info(logger, "Init <partial test check>");
+        info(logger, "Init <ROM partial test check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");
@@ -186,7 +186,7 @@ begin
         show_all(logger, display_handler);
 
         wait for 15*clk_period;
-        info(logger, "Init <read all ROM>");
+        info(logger, "Init <ROM read all check>");
         info(logger, "---------------------------------------------------");
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");
