@@ -228,3 +228,22 @@ jobs:
             ./mem_8_string.hex
             ./mem_16_string.hex
             ./mem_32_string.hex
+
+  CHECK_neorv32_MEM_wishbone_alone_sim:
+    runs-on: ubuntu-latest
+    needs: neorv32_MEM_wishbone_alone_sim
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download the results of the job neorv32_MEM_wishbone_alone_sim'
+        uses: actions/download-artifact@v4
+        with:
+          name: neorv32_MEM_wishbone_ALONE_SIM_FILES
+      - name: 'MEM Checker compares the RAM output data with the ROM input data'
+        run: |
+          diff mem_8_string.hex data/ROM-sim/string_8.hex
+          diff mem_16_string.hex data/ROM-sim/string_16.hex
+          diff mem_32_string.hex data/ROM-sim/string_32.hex
