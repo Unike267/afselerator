@@ -44,7 +44,7 @@ int main() {
   uint32_t        mask = 0x10000000;
   // MEM Items (2**MEM depth); ROM and RAM has the same items
   uint32_t items        =       1024;
-  // Array to store data from the ROM
+  // Array to store data from the RAM
   uint32_t DATA[items];
 
   int i;
