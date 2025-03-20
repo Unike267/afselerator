@@ -1,0 +1,198 @@
+\documentclass[]{standalone}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usepackage{amsmath} % for \longrightarrow
+\usetikzlibrary {decorations.pathmorphing,shadows} 
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary {arrows.meta} 
+\usetikzlibrary{shapes,arrows}
+\usepackage{relsize}
+\usepackage{pgfmath}
+\usepackage[a4paper, total={8in, 8in}]{geometry}
+
+\tikzset{fontscale/.style = {font=\relsize{#1}}}
+
+\begin{document}
+\pagestyle{empty}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+%Def rectangles 
+
+%NEORV32
+\def\NEOh{3.5}
+\def\NEOv{2.5}
+\def\NEO{\NEOh,\NEOv}
+  %XBUS
+  \def\XBUSh{3}
+  \def\XBUSv{1}
+  \def\XBUS{\XBUSh,\XBUSv}
+%Intercon
+\def\INTERCONh{3}
+\def\INTERCONv{1}
+\def\INTERCON{\INTERCONh,\INTERCONv}
+%ROM
+\def\ROMh{3}
+\def\ROMv{1}
+\def\ROM{\ROMh,\ROMv}
+%RAM
+\def\RAMh{3}
+\def\RAMv{1}
+\def\RAM{\RAMh,\RAMv}
+%Background ROM
+\def\BackROMh{4}
+\def\BackROMv{2}
+\def\BackROM{\BackROMh,\BackROMv}
+%Background RAM
+\def\BackRAMh{4}
+\def\BackRAMv{2}
+\def\BackRAM{\BackRAMh,\BackRAMv}
+%Background
+\def\Backh{9.25}
+\def\Backv{8.25}
+\def\Back{\Backh,\Backv}
+%BackgroundTOT
+\def\BackTOTh{9.75}
+\def\BackTOTv{10.25}
+\def\BackTOT{\BackTOTh,\BackTOTv}
+       
+
+%Def displacements
+
+%Gaps
+%Horizontal gap
+\def\gaph{0}
+%Vertical gap
+\def\gapv{0}
+
+
+%NEORV32
+\def\NEOdisplah{5.25+\gaph}
+\def\NEOdisplav{5.25+\gapv}
+  %XBUS
+  \def\XBUSdisplah{5.5+\gaph}
+  \def\XBUSdisplav{5.5+\gapv}
+%INTERCON
+\def\INTERCONdisplah{1.25+\gaph}
+\def\INTERCONdisplav{3.75+\gapv}
+%ROM
+\def\ROMdisplah{1.25+\gaph}
+\def\ROMdisplav{1+\gapv}
+%RAM
+\def\RAMdisplah{5.5+\gaph}
+\def\RAMdisplav{1+\gapv}
+%Background ROM
+\def\BackROMdisplah{0.75+\gaph}
+\def\BackROMdisplav{0.5+\gapv}
+%Background RAM
+\def\BackRAMdisplah{5+\gaph}
+\def\BackRAMdisplav{0.5+\gapv}
+%Background
+\def\Backdisplah{0.25+\gaph}
+\def\Backdisplav{0+\gapv}
+%BackgroundTOT
+\def\BackTOTdisplah{0+\gaph}
+\def\BackTOTdisplav{-1.75+\gapv}
+
+
+%TEXT:
+
+\def\HEXdisplav{-1}
+
+\begin{tikzpicture}
+\node (center) {};
+\path (center)+(0,-5) node (name) {};
+\path (center)+(5,0) node (name) {};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%       TITLE      %%%%%%%%%%%%%%%%%%%%%%%%%
+%\path (center)+(\titdisplah,\titdisplav) node [fontscale=3](name) {};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%       BLOCKS        %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pgfmathparse{(\NEOh)/2}
+\let\NEOhalfh\pgfmathresult
+\pgfmathparse{(\NEOv)/2}
+\let\NEOhalfv\pgfmathresult
+
+\pgfmathparse{(\XBUSh)/2}
+\let\XBUShalfh\pgfmathresult
+\pgfmathparse{(\XBUSv)/2}
+\let\XBUShalfv\pgfmathresult
+
+\pgfmathparse{(\INTERCONh)/2}
+\let\INTERCONhalfh\pgfmathresult
+\pgfmathparse{(\INTERCONv)/2}
+\let\INTERCONhalfv\pgfmathresult
+
+\pgfmathparse{(\ROMh)/2}
+\let\ROMhalfh\pgfmathresult
+\pgfmathparse{(\ROMv)/2}
+\let\ROMhalfv\pgfmathresult
+
+\pgfmathparse{(\RAMh)/2}
+\let\RAMhalfh\pgfmathresult
+\pgfmathparse{(\RAMv)/2}
+\let\RAMhalfv\pgfmathresult
+
+%NEORV32
+\draw[fill=yellow!20,rounded corners] (\NEOdisplah,\NEOdisplav) rectangle ++(\NEO);
+\path (center)+(\NEOdisplah+\NEOhalfh,\NEOdisplav+\NEOhalfv+\NEOhalfv/2) node [fontscale=2] (name) {NEORV32}; 
+  %XBUS
+  \draw[fill=green!20,rounded corners] (\XBUSdisplah,\XBUSdisplav) rectangle ++(\XBUS);
+  \path (center)+(\XBUSdisplah+\XBUShalfh,\XBUSdisplav+\XBUShalfv) node [fontscale=2] (name) {XBUS}; 
+%INTERCON
+\draw[fill=red!20,rounded corners] (\INTERCONdisplah,\INTERCONdisplav) rectangle ++(\INTERCON);
+\path (center)+(\INTERCONdisplah+\INTERCONhalfh,\INTERCONdisplav+\INTERCONhalfv) node [fontscale=2] (name) {INTERCON}; 
+%ROM
+\draw[fill=orange!20,rounded corners] (\ROMdisplah,\ROMdisplav) rectangle ++(\ROM);
+\path (center)+(\ROMdisplah+\ROMhalfh,\ROMdisplav+\ROMhalfv) node [fontscale=2] (name) {ROM}; 
+%RAM
+\draw[fill=orange!20,rounded corners] (\RAMdisplah,\RAMdisplav) rectangle ++(\RAM);
+\path (center)+(\RAMdisplah+\RAMhalfh,\RAMdisplav+\RAMhalfv) node [fontscale=2] (name) {RAM}; 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%       ARROWS        %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%ROM Wishbone wrapper - INTERCON
+\draw[black,ultra thick,arrows={-Stealth}] (\ROMdisplah+\ROMhalfh,\BackROMdisplav+\BackROMv) to (\ROMdisplah+\ROMhalfh,\INTERCONdisplav);
+%INTERCON - RAM Wishbone wrapper
+\draw[black,ultra thick,arrows={Stealth-}] (\INTERCONdisplah+\INTERCONh,\INTERCONdisplav+\INTERCONhalfv) to (\RAMdisplah+\RAMhalfh+0.025,\INTERCONdisplav+\INTERCONhalfv);
+\draw[black,ultra thick,arrows={-Stealth}] (\RAMdisplah+\RAMhalfh,\INTERCONdisplav+\INTERCONhalfv) to (\RAMdisplah+\RAMhalfh,\BackRAMdisplav+\BackRAMv);
+%XBUS-INTERCON
+\draw[black,ultra thick,arrows={Stealth-}] (\INTERCONdisplah+\INTERCONhalfh,\INTERCONdisplav+\INTERCONv) to (\INTERCONdisplah+\INTERCONhalfh,\XBUSdisplav+\XBUShalfv);
+\draw[black,ultra thick,arrows={-Stealth}] (\INTERCONdisplah+\INTERCONhalfh-0.025,\XBUSdisplav+\XBUShalfv) to (\XBUSdisplah,\XBUSdisplav+\XBUShalfv);
+%HEX-ROM
+\draw[black,ultra thick,arrows={-Stealth}] (\ROMdisplah+\ROMhalfh,\HEXdisplav) to (\ROMdisplah+\ROMhalfh,\ROMdisplav);
+%RAM-HEX
+\draw[black,ultra thick,dashdotted,arrows={Stealth-}] (\RAMdisplah+\RAMhalfh,\HEXdisplav+0.5) to (\RAMdisplah+\RAMhalfh,\RAMdisplav);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%       clouds        %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%ROM HEX
+\node [cloud, draw,fill=white!20,cloud puffs=10,cloud puff arc=120, aspect=2, inner sep = 0pt] at (\ROMdisplah+\ROMhalfh,\HEXdisplav) [fontscale=-2]  {DATA IN};
+
+%RAM HEX
+\node [cloud, draw,fill=white!20,cloud puffs=10,cloud puff arc=120, aspect=2, inner sep = -4pt] at (\RAMdisplah+\RAMhalfh,\HEXdisplav) [fontscale=-2] {DATA OUT};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%       TEXT        %%%%%%%%%%%%%%%%%%%%%%%%%
+\path (center)+(\ROMdisplah+\ROMhalfh,\BackROMv+\ROMhalfv/2) node (name) [fontscale=-2] {Wishbone Wrapper};
+\path (center)+(\RAMdisplah+\RAMhalfh,\BackRAMv+\RAMhalfv/2) node (name) [fontscale=-2] {Wishbone Wrapper};
+\path (center)+(2.75,7) node (name) [fontscale=-2] {entity neorv32\_MEM\_wishbone};
+
+
+
+\begin{pgfonlayer}{background}
+    %BackgroundTOT
+    \path [fill=white!10,opacity=0.5] (\BackTOTdisplah,\BackTOTdisplav) rectangle ++(\BackTOT);
+    %Background
+    \path [fill=white!10,rounded corners,opacity=0.5,draw=black!50, loosely dashdotted] (\Backdisplah,\Backdisplav) rectangle ++(\Back);
+    %Background ROM
+    \path [fill=gray!10,rounded corners,opacity=0.5,draw=black!50, loosely dashdotted] (\BackROMdisplah,\BackROMdisplav) rectangle ++(\BackROM);
+    %Background RAM
+    \path [fill=gray!10,rounded corners,opacity=0.5,draw=black!50, loosely dashdotted] (\BackRAMdisplah,\BackRAMdisplav) rectangle ++(\BackRAM);
+
+\end{pgfonlayer}
+
+\end{tikzpicture}
+
+\end{document}
