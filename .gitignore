@@ -1,3 +1,4 @@
 vunit_out
 build
 *.o
+*.pdf
