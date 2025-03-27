@@ -10,4 +10,6 @@ mv ../../../../ram_neorv32_application_image.vhd ../../../../neorv32-setups/neor
 ./run.py -v MEM.tb_neorv32_ram_wishbone.32.test_ram --gtkwave-fmt vcd
 mv vunit_out/wave/*.vcd ../../../..
 mv vunit_out/outcsv/*.csv ../../../..
-mv ../../../../data/RAM-sim/*.hex ../../../..
+mv ../../../../data/RAM-sim/8_string.hex ../../../../neorv32_ram_alone_wishbone_8_string.hex
+mv ../../../../data/RAM-sim/16_string.hex ../../../../neorv32_ram_alone_wishbone_16_string.hex
+mv ../../../../data/RAM-sim/32_string.hex ../../../../neorv32_ram_alone_wishbone_32_string.hex

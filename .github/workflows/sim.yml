@@ -127,9 +127,9 @@ jobs:
             ./tb_RAM_8.csv
             ./tb_RAM_16.csv
             ./tb_RAM_32.csv
-            ./8_string.hex
-            ./16_string.hex
-            ./32_string.hex
+            ./ram_alone_8_string.hex
+            ./ram_alone_16_string.hex
+            ./ram_alone_32_string.hex
 
   RAM_wishbone_alone_sim:
     runs-on: ubuntu-latest
@@ -155,9 +155,9 @@ jobs:
             ./tb_RAM_wishbone_8.csv
             ./tb_RAM_wishbone_16.csv
             ./tb_RAM_wishbone_32.csv
-            ./8_string.hex
-            ./16_string.hex
-            ./32_string.hex
+            ./ram_alone_wishbone_8_string.hex
+            ./ram_alone_wishbone_16_string.hex
+            ./ram_alone_wishbone_32_string.hex
 
   neorv32_RAM_wishbone_alone_sim:
     runs-on: ubuntu-latest
@@ -188,9 +188,9 @@ jobs:
             ./tb_neorv32_RAM_wishbone_8.csv
             ./tb_neorv32_RAM_wishbone_16.csv
             ./tb_neorv32_RAM_wishbone_32.csv
-            ./8_string.hex
-            ./16_string.hex
-            ./32_string.hex
+            ./neorv32_ram_alone_wishbone_8_string.hex
+            ./neorv32_ram_alone_wishbone_16_string.hex
+            ./neorv32_ram_alone_wishbone_32_string.hex
 
   neorv32_MEM_wishbone_alone_sim:
     runs-on: ubuntu-latest

@@ -9,4 +9,6 @@ cd $(dirname "$0")
 
 mv vunit_out/wave/*.vcd   ../../..
 mv vunit_out/outcsv/*.csv ../../..
-mv ../../../data/RAM-sim/*.hex ../../..
+mv ../../../data/RAM-sim/8_string.hex ../../../ram_alone_8_string.hex
+mv ../../../data/RAM-sim/16_string.hex ../../../ram_alone_16_string.hex
+mv ../../../data/RAM-sim/32_string.hex ../../../ram_alone_32_string.hex
