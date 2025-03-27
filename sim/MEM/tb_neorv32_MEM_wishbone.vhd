@@ -239,7 +239,6 @@ begin
         info(logger, "Config:");
         info(logger, "PATH of ROM FILE: <" & ROM_LOAD_FILE & ">");
         info(logger, "ROM WIDTH: <" & to_string(ROM_WIDTH) & ">");
-        info(logger, "PATH of STORED-RAM FILE: <" & RAM_STORE_FILE & ">");
         info(logger, "RAM WIDTH: <" & to_string(RAM_WIDTH) & ">");
         wait until rising_edge(clk);
         start <= true;
