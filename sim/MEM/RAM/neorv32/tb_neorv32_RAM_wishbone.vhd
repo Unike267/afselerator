@@ -84,8 +84,8 @@ begin
   entity MEM.neorv32_RAM_wishbone
                                  generic map(
                                             CLOCK_FREQUENCY   => CLOCK_FREQUENCY,
-                                            IMEM_SIZE => 8192,
-                                            DMEM_SIZE => 8192,
+                                            IMEM_SIZE         => 8192,
+                                            DMEM_SIZE         => 8192,
                                             RAM_WIDTH         => RAM_WIDTH,
                                             RAM_DEPTH         => RAM_DEPTH
                                             )

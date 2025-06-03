@@ -23,8 +23,8 @@ entity neorv32_ROM_wishbone is
   generic (
     --          Generic defaults: |-----------------------|
     CLOCK_FREQUENCY   : natural := 100000000;               -- clock frequency of clk_i in Hz
-    IMEM_SIZE : natural := 8192;                    -- size of processor-internal instruction memory in bytes
-    DMEM_SIZE : natural := 8192;                    -- size of processor-internal data memory in bytes
+    IMEM_SIZE         : natural := 8192;                    -- size of processor-internal instruction memory in bytes
+    DMEM_SIZE         : natural := 8192;                    -- size of processor-internal data memory in bytes
     ROM_WIDTH         : natural := 8;                       -- ROM_WIDTH = ROM data width
     ROM_DEPTH         : natural := 10;                      -- ROM_DEPTH = Log2 of number of elements that the ROM has; Number of ROM elements has to be a power of two.
     ROM_LOAD_FILE     : string  := "../../data/ROM-sim/"    -- ROM_LOAD_FILE = PATH of the LOAD FILE
