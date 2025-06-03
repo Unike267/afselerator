@@ -166,8 +166,8 @@ begin
   entity MEM.neorv32_ROM_wishbone
                                  generic map(
                                             CLOCK_FREQUENCY   => CLOCK_FREQUENCY,
-                                            MEM_INT_IMEM_SIZE => 8192,
-                                            MEM_INT_DMEM_SIZE => 8192,
+                                            IMEM_SIZE => 8192,
+                                            DMEM_SIZE => 8192,
                                             ROM_WIDTH         => ROM_WIDTH,
                                             ROM_DEPTH         => ROM_DEPTH,
                                             ROM_LOAD_FILE     => ROM_LOAD_FILE

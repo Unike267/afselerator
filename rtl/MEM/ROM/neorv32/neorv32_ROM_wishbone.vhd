@@ -23,8 +23,8 @@ entity neorv32_ROM_wishbone is
   generic (
     --          Generic defaults: |-----------------------|
     CLOCK_FREQUENCY   : natural := 100000000;               -- clock frequency of clk_i in Hz
-    MEM_INT_IMEM_SIZE : natural := 8192;                    -- size of processor-internal instruction memory in bytes
-    MEM_INT_DMEM_SIZE : natural := 8192;                    -- size of processor-internal data memory in bytes
+    IMEM_SIZE : natural := 8192;                    -- size of processor-internal instruction memory in bytes
+    DMEM_SIZE : natural := 8192;                    -- size of processor-internal data memory in bytes
     ROM_WIDTH         : natural := 8;                       -- ROM_WIDTH = ROM data width
     ROM_DEPTH         : natural := 10;                      -- ROM_DEPTH = Log2 of number of elements that the ROM has; Number of ROM elements has to be a power of two.
     ROM_LOAD_FILE     : string  := "../../data/ROM-sim/"    -- ROM_LOAD_FILE = PATH of the LOAD FILE
@@ -95,11 +95,11 @@ begin
                                      RISCV_ISA_M       => true,            -- implement mul/div extension?
                                      RISCV_ISA_Zicntr  => true,            -- implement base counters?
                                      -- Internal Instruction memory --
-                                     MEM_INT_IMEM_EN   => true,              -- implement processor-internal instruction memory
-                                     MEM_INT_IMEM_SIZE => MEM_INT_IMEM_SIZE, -- size of processor-internal instruction memory in bytes
+                                     IMEM_EN   => true,              -- implement processor-internal instruction memory
+                                     IMEM_SIZE => IMEM_SIZE, -- size of processor-internal instruction memory in bytes
                                     -- Internal Data memory --
-                                    MEM_INT_DMEM_EN    => true,              -- implement processor-internal data memory
-                                    MEM_INT_DMEM_SIZE  => MEM_INT_DMEM_SIZE, -- size of processor-internal data memory in bytes
+                                    DMEM_EN    => true,              -- implement processor-internal data memory
+                                    DMEM_SIZE  => DMEM_SIZE, -- size of processor-internal data memory in bytes
                                     -- Processor peripherals --
                                     IO_CLINT_EN        => true,              -- implement machine system timer (MTIME)?
                                     IO_UART0_EN        => true,               -- implement primary universal asynchronous receiver/transmitter (UART0)?
