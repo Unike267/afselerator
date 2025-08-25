@@ -149,7 +149,6 @@ begin
                                     IO_UART0_EN        => true,               -- implement primary universal asynchronous receiver/transmitter (UART0)?
                                     -- XBUS (WISHBONE) --
                                     XBUS_EN            => true,              -- implement XBUS interface?
-                                    XBUS_TIMEOUT       => 4096,              -- cycles after a pending bus access auto-terminates (0 = disabled)
                                     XBUS_REGSTAGE_EN   => false              -- add XBUS register stage
                                     )
                          port    map(
