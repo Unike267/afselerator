@@ -205,7 +205,7 @@ begin
   ctrl      <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.core_complex_gen(0).neorv32_cpu_inst.neorv32_cpu_control_inst.ctrl_o : ctrl_bus_t >>;
   csr_we    <= ctrl.csr_we;
   csr_addr  <= ctrl.csr_addr;
-  csr_rdata <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.core_complex_gen(0).neorv32_cpu_inst.neorv32_cpu_control_inst.csr_rdata_o : std_ulogic_vector(XLEN-1 downto 0) >>;
+  csr_rdata <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.core_complex_gen(0).neorv32_cpu_inst.neorv32_cpu_control_inst.csr_rdata_o : std_ulogic_vector(31 downto 0) >>;
 
   main: process
   begin
