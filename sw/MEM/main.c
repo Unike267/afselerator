@@ -11,6 +11,7 @@
 
 #include <neorv32.h>
 #include <string.h>
+#include "xbus.h"
 
 #define BAUD_RATE 19200
 
@@ -38,10 +39,6 @@ int main() {
   }
 
   // Declaration of variables 
-  // ROM BASE address 0x90000000
-  static uint32_t add  = 0x90000000;
-  // RAM base address is 0xA0000000 so the mask will be 0xA0000000 - 0x90000000 = 0x10000000
-  uint32_t        mask = 0x10000000;
   // MEM Items (2**MEM depth); ROM and RAM has the same items
   uint32_t items        =       1024;
   // Array to store data from the RAM
@@ -56,8 +53,8 @@ int main() {
   uint32_t test_partial_items = 16;
   // Array of addresses to be checked in partial test
   // ARRAY[N] = {POS0,POS1,POS2,...,POSN}
-  uint32_t addr_data[16] = {0x90000000,0x90000004,0x90000008,0x90000010,0x90000020,0x90000040,0x90000080,
-      0x90000100,0x90000200,0x90000400,0x90000800,0x90000FFC,0x90000058,0x90000124,0x9000092C,0x90000A68};
+  uint32_t addr_data[16] = {0x00000000,0x00000004,0x00000008,0x00000010,0x00000020,0x00000040,0x00000080,
+      0x00000100,0x00000200,0x00000400,0x00000800,0x00000FFC,0x00000058,0x00000124,0x0000092C,0x00000A68};
   // Items to be checked in visual test via UART
   uint32_t visual_items_check = 2;
   // Array of addresses to be checked in visual test via UART
@@ -69,25 +66,21 @@ int main() {
   if(partial == 1){
     for (i=0; i < test_partial_items; i++){
       // Write to RAM what has been read in ROM
-      neorv32_cpu_store_unsigned_word(addr_data[i]+mask,neorv32_cpu_load_unsigned_word(addr_data[i]));
+      write_RAM(addr_data[i],read_ROM(addr_data[i]));
     }
   }
   else{
     neorv32_cpu_csr_write(CSR_MCYCLE, 0);
-      for (i=0; i < items; i++){
-        // Write to RAM what has been read in ROM
-        neorv32_cpu_store_unsigned_word(add+mask,neorv32_cpu_load_unsigned_word(add));
-        add = add + 4;
-      }
+    for (i=0; i < items * 4 ; i+=4){
+      // Write to RAM what has been read in ROM
+      write_RAM(i,read_ROM(i));
+    }
     neorv32_cpu_csr_read(CSR_MCYCLE); 
 
-    add   = 0x90000000;
-
     neorv32_cpu_csr_write(CSR_MCYCLE, 0);
-    for (i=0; i < items; i++){
-     // READ all the RAM
-      DATA[i] = neorv32_cpu_load_unsigned_word(add+mask);
-      add = add + 4;
+    for (i=0; i < items * 4 ; i+=4){
+      // READ all the RAM
+      DATA[i/4] = read_RAM(i);
     }
     neorv32_cpu_csr_read(CSR_MCYCLE); 
 
@@ -105,7 +98,7 @@ int main() {
   }
 
   // Force error to stop the test. It is trying to load a misaligned data from address 0xA0000001 (see RAM_wishbone.vhd file) so the err wishbone signal is going to activate.
-    neorv32_cpu_load_unsigned_byte(0xA0000001);
+  neorv32_cpu_load_unsigned_byte(0xA0000001);
 
   #else
   uint32_t wr_lat;
@@ -120,20 +113,17 @@ int main() {
 
   // Measures how many cycles are used to write to RAM what has been read in ROM
   neorv32_cpu_csr_write(CSR_MCYCLE, 0);
-  for (i=0; i < items; i++){
+  for (i=0; i < items * 4 ; i+=4){
     // Write to RAM what has been read in ROM
-    neorv32_cpu_store_unsigned_word(add+mask,neorv32_cpu_load_unsigned_word(add));
-    add = add + 4;
+    write_RAM(i,read_ROM(i));
   }
   wr_lat = neorv32_cpu_csr_read(CSR_MCYCLE) - 1; 
 
-  add   = 0x90000000;
-
   // Measures how many cycles are used to read the entire RAM
   neorv32_cpu_csr_write(CSR_MCYCLE, 0);
-  for (i=0; i < items; i++){
-    DATA[i] = neorv32_cpu_load_unsigned_word(add+mask);
-    add = add + 4;
+  for (i=0; i < items * 4 ; i+=4){
+  // READ all the RAM
+    DATA[i/4] = read_RAM(i);
   }
   rd_lat = neorv32_cpu_csr_read(CSR_MCYCLE) - 1;
 

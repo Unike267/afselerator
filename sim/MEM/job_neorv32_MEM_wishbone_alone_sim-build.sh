@@ -9,13 +9,17 @@ mkdir mem-partial
 mkdir mem-all 
 cp hello_world/makefile mem-partial/makefile 
 cp hello_world/makefile mem-all/makefile 
-cp ../../../../sw/MEM/main.c mem-partial/main.c 
-cp ../../../../sw/MEM/main.c mem-all/main.c 
+cp ../../../../sw/MEM/main.c mem-partial/
+cp ../../../../sw/MEM/xbus.c mem-partial/
+cp ../../../../sw/MEM/xbus.h mem-partial/
+cp ../../../../sw/MEM/main.c mem-all/
+cp ../../../../sw/MEM/xbus.c mem-all/
+cp ../../../../sw/MEM/xbus.h mem-all/
 cd mem-partial
-sed -i '19s|//#define sim|#define sim|' main.c
+sed -i '20s|//#define sim|#define sim|' main.c
 cd ../mem-all
-sed -i '19s|//#define sim|#define sim|' main.c
-sed -i '54s|  uint32_t partial = 1;|  uint32_t partial = 0;|' main.c
+sed -i '20s|//#define sim|#define sim|' main.c
+sed -i '51s|  uint32_t partial = 1;|  uint32_t partial = 0;|' main.c
 cd ../../..
 make -C sw/example/mem-partial clean_all MARCH=rv32imac_zicsr_zifencei info image
 make -C sw/example/mem-all clean_all MARCH=rv32imac_zicsr_zifencei info image
