@@ -93,12 +93,12 @@ MEM.add_source_files([
     ROOT /                          "../../../../rtl/MEM/ROM/ROM.vhd",
     ROOT /        "../../../../rtl/MEM/ROM/wishbone/ROM_wishbone.vhd",
     ROOT / "../../../../rtl/MEM/ROM/neorv32/neorv32_ROM_wishbone.vhd",
-    ROOT /        "../../../../neorv32-setups/neorv32/rtl/core/*.vhd", 
+    ROOT /        "../../../../neorv32/rtl/core/*.vhd", 
 ])
 
 NEORV32 = vu.add_library("neorv32")
 NEORV32.add_source_files([
-    ROOT /        "../../../../neorv32-setups/neorv32/rtl/core/*.vhd", 
+    ROOT /        "../../../../neorv32/rtl/core/*.vhd", 
 ])
 
 ROM_PATH      = [str(ROOT)+"/../../../../data/ROM-sim/"]
