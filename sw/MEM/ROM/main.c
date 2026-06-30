@@ -44,7 +44,7 @@ int main() {
   uint32_t items        =       1024;
   // Array to store data from the ROM
   uint32_t DATA[items];
-  int i;
+  uint32_t i;
 
   #if defined sim
   // Choice between partial test or read all test

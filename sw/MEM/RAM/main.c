@@ -45,7 +45,7 @@ int main() {
   // Array to store data from the RAM
   uint32_t DATA[items];
   //uint32_t din = 0x00000000;
-  int i;
+  uint32_t i;
 
   #if defined sim
   // Items to be checked in visual test via UART

@@ -44,7 +44,7 @@ int main() {
   // Array to store data from the RAM
   uint32_t DATA[items];
 
-  int i;
+  uint32_t i;
 
   #if defined sim
   // Choice between partial test or read/write all test
