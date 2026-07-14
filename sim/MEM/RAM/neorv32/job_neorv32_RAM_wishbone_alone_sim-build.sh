@@ -6,7 +6,7 @@ cd $(dirname "$0")
 
 cd ../../../../neorv32/sw/example 
 mkdir ram
-cp hello_world/makefile ram/makefile
+cp hello_world/Makefile ram/Makefile
 cp ../../../sw/MEM/RAM/main.c ram/main.c
 cd ram
 sed -i '19s|//#define sim|#define sim|' main.c

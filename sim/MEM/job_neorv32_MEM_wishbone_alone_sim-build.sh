@@ -7,8 +7,8 @@ cd $(dirname "$0")
 cd ../../neorv32/sw/example 
 mkdir mem-partial 
 mkdir mem-all 
-cp hello_world/makefile mem-partial/makefile 
-cp hello_world/makefile mem-all/makefile 
+cp hello_world/Makefile mem-partial/Makefile 
+cp hello_world/Makefile mem-all/Makefile 
 cp ../../../sw/MEM/main.c mem-partial/
 cp ../../../sw/MEM/xbus.c mem-partial/
 cp ../../../sw/MEM/xbus.h mem-partial/

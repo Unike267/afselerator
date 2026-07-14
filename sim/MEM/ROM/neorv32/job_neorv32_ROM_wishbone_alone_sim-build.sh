@@ -7,8 +7,8 @@ cd $(dirname "$0")
 cd ../../../../neorv32/sw/example 
 mkdir rom-partial 
 mkdir rom-all 
-cp hello_world/makefile rom-partial/makefile 
-cp hello_world/makefile rom-all/makefile 
+cp hello_world/Makefile rom-partial/Makefile 
+cp hello_world/Makefile rom-all/Makefile 
 cp ../../../sw/MEM/ROM/main.c rom-partial/main.c 
 cp ../../../sw/MEM/ROM/main.c rom-all/main.c 
 cd rom-partial
