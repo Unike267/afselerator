@@ -153,15 +153,18 @@ architecture tb of tb_neorv32_MEM_wishbone is
   signal m_stb     : std_logic                      :=            '0' ;
   signal m_ack     : std_logic                      :=            '0' ;
   signal m_cyc     : std_logic                      :=            '0' ;
-  signal m_err     : std_logic                      :=            '0' ;
   signal m_din     : std_ulogic_vector(31 downto 0) := (others => '0');
   signal m_dout    : std_ulogic_vector(31 downto 0) := (others => '0');
   signal m_adr     : std_ulogic_vector(31 downto 0) := (others => '0');
   signal ctrl      : ctrl_bus_t;
   signal csr_we    : std_logic                      :=            '0' ;
   signal csr_addr  : std_ulogic_vector(11 downto 0) := (others => '0');
+  signal csr_wdata : std_ulogic_vector(31 downto 0) := (others => '0');
   signal csr_rdata : std_ulogic_vector(31 downto 0) := (others => '0');
 
+
+-- End of test: main.c writes this magic value into the MSCRATCH CSR (0x340) once UART0 is idle (see SIM_END_MAGIC in main.c)
+  constant sim_end_magic_c : std_ulogic_vector(31 downto 0) := x"CAFE0E0D";
 
 -- Logging:
   constant logger : logger_t := get_logger("tb_neorv32_MEM_wishbone_" & to_string(ROM_WIDTH) & "_" & to_string(RAM_WIDTH));
@@ -210,7 +213,6 @@ begin
   m_stb <= << signal  .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.xbus_stb_o : std_logic >>;
   m_ack <= << signal  .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.xbus_ack_i : std_logic >>;
   m_cyc <= << signal  .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.xbus_cyc_o : std_logic >>;
-  m_err <= << signal  .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.xbus_err_i : std_logic >>;
   m_din <= << signal  .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.xbus_dat_i : std_ulogic_vector >>;
   m_dout <= << signal .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.xbus_dat_o : std_ulogic_vector >>;
   m_adr <= << signal  .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.xbus_adr_o : std_ulogic_vector >>;
@@ -219,6 +221,7 @@ begin
   ctrl      <= << signal .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.core_complex_gen(0).core_complex_inst.cpu_inst.cpu_control_inst.ctrl_o : ctrl_bus_t >>;
   csr_we    <= ctrl.csr_we;
   csr_addr  <= ctrl.csr_addr;
+  csr_wdata <= ctrl.csr_wdata;
   csr_rdata <= << signal .tb_neorv32_MEM_wishbone.uut.neorv32_top_inst.core_complex_gen(0).core_complex_inst.cpu_inst.cpu_control_inst.csr_rdata_o : std_ulogic_vector(31 downto 0) >>;
 
   main: process
@@ -307,7 +310,7 @@ begin
         check_equal(signed(m_dout(RAM_WIDTH-1 downto 0)),checker(y)(x)(RAM_WIDTH-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
-      wait until m_err = '1' and rising_edge(clk); -- stop condition to finish test, see associated main.c
+      wait until rising_edge(clk) and csr_we = '1' and csr_addr = x"340" and csr_wdata = sim_end_magic_c; -- stop condition to finish test (MSCRATCH <= SIM_END_MAGIC), see associated main.c
       done <= true;
       wait;
     else 
@@ -344,7 +347,7 @@ begin
       wait until rising_edge(clk) and csr_we = '0' and csr_addr = x"B00" and csr_rdata /= x"00000000"; -- CSR MYCYCLE ADDR IS 0xB00
       info(logger, "---------------------------------------------------");
       info(logger, "To read the entire RAM (" & integer'image(2**RAM_DEPTH) & " elements) <" & to_string(to_integer(unsigned(csr_rdata))-1) & "> cycles were required");   
-      wait until m_err = '1' and rising_edge(clk); -- stop condition to finish test, see associated main.c
+      wait until rising_edge(clk) and csr_we = '1' and csr_addr = x"340" and csr_wdata = sim_end_magic_c; -- stop condition to finish test (MSCRATCH <= SIM_END_MAGIC), see associated main.c
       info(logger, "---------------------- store ----------------------");
       info(logger, "Store RAM in the file " & RAM_STORE_FILE);
       with RAM_WIDTH select

@@ -13,6 +13,8 @@
 #include <string.h>
 
 #define BAUD_RATE 19200
+// Magic value written to the MSCRATCH CSR to tell the testbench that the test is finished (see tb_*.vhd stop condition)
+#define SIM_END_MAGIC 0xCAFE0E0D
 
 // This define allows you to switch between simulation or implementation. 
 // Commented for implementation uncommented for simulation
@@ -75,14 +77,17 @@ int main() {
     // addr   0  (0x00) ->  0 (0x00),   0 (0x0000),   0 (0x00000000)
     // addr 297 (0x129) -> 41 (0x29), 297 (0x0129), 297 (0x00000129)
     neorv32_uart0_printf("-%u,%u-",visual_checker[i],DATA[visual_checker[i]]);
-      // To make sure that the previous uart printout is finished correctly (this print will only be made halfway)
+      // End marker of the visual check
       if (i == visual_items_check - 1){
         neorv32_uart0_printf("END");
       }
   }
 
-  // Force error to stop the test. It is trying to load an out of range data from address 0xA0000FFD (if items are 1024 the maximum address is 0xA0000FFC see RAM_wishbone.vhd file) so the err wishbone signal is going to activate.
-    neorv32_cpu_load_unsigned_word(0xA0001000);
+  // Stop condition for the testbench: wait until UART0 has sent everything (so all results are visible
+  // in the simulation console) and then write a magic value into the MSCRATCH CSR. The testbench waits for
+  // this CSR write (no bus error / trap is needed anymore to finish the test).
+  while (neorv32_uart_tx_busy(NEORV32_UART0));
+  neorv32_cpu_csr_write(CSR_MSCRATCH, SIM_END_MAGIC);
   #else
   uint32_t wr_lat;
   uint32_t rd_lat;
