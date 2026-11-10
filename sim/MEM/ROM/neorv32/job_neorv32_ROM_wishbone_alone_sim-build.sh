@@ -12,10 +12,10 @@ cp hello_world/Makefile rom-all/Makefile
 cp ../../../sw/MEM/ROM/main.c rom-partial/main.c 
 cp ../../../sw/MEM/ROM/main.c rom-all/main.c 
 cd rom-partial
-sed -i '19s|//#define sim|#define sim|' main.c
+sed -i 's|^//#define sim$|#define sim|' main.c
 cd ../rom-all
-sed -i '19s|//#define sim|#define sim|' main.c
-sed -i '51s|  uint32_t partial = 1;|  uint32_t partial = 0;|' main.c
+sed -i 's|^//#define sim$|#define sim|' main.c
+sed -i 's|^  uint32_t partial = 1;|  uint32_t partial = 0;|' main.c
 cd ../../..
 make -C sw/example/rom-partial clean_all MARCH=rv32imac_zicsr_zifencei info image
 make -C sw/example/rom-all clean_all MARCH=rv32imac_zicsr_zifencei info image

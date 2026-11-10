@@ -24,13 +24,8 @@ int main() {
   // Capture all exceptions and give debug info via UART0
   neorv32_rte_setup();
 
-  // Setup UART at default baud rate, no interrupts
-  neorv32_uart0_setup(BAUD_RATE, 0);
-
-  // Check if UART0 unit is implemented at all
-  if (neorv32_uart0_available() == 0) {
-    return -1; // abort if not implemented
-  }
+  // setup UART at default baud rate, no interrupts
+  neorv32_uart_setup(NEORV32_UART0, BAUD_RATE, UART_RX_IRQ_NONE, UART_TX_IRQ_NONE);
 
   // check if the CPU base counters are implemented
   if ((neorv32_cpu_csr_read(CSR_MXISA) & (1 << CSR_MXISA_ZICNTR)) == 0) {

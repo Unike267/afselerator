@@ -9,7 +9,7 @@ mkdir ram
 cp hello_world/Makefile ram/Makefile
 cp ../../../sw/MEM/RAM/main.c ram/main.c
 cd ram
-sed -i '19s|//#define sim|#define sim|' main.c
+sed -i 's|^//#define sim$|#define sim|' main.c
 cd ../../..
 make -C sw/example/ram clean_all MARCH=rv32imac_zicsr_zifencei info image
 cp sw/example/ram/neorv32_imem_image.vhd ../ram_neorv32_imem_image.vhd
