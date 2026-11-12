@@ -90,6 +90,7 @@ MEM.add_source_files([
     ROOT /                              "tb_neorv32_ROM_wishbone.vhd",
     ROOT /                              "../../../uart_rx.simple.vhd",
     ROOT /                      "../../../../rtl/MEM/MEM_package.vhd",
+    ROOT /                "../../../../rtl/MEM/finisher/finisher.vhd",
     ROOT /                          "../../../../rtl/MEM/ROM/ROM.vhd",
     ROOT /        "../../../../rtl/MEM/ROM/wishbone/ROM_wishbone.vhd",
     ROOT / "../../../../rtl/MEM/ROM/neorv32/neorv32_ROM_wishbone.vhd",

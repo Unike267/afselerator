@@ -17,9 +17,12 @@
 #define ROM_BASE_ADDR       0x90000000
 // The RAM base address is 0xA0000000
 #define RAM_BASE_ADDR       0xA0000000
+// The finisher address is 0xB0000000 (writing to it ends the simulation, see finisher.vhd)
+#define FINISHER_ADDR       0xB0000000
 
 
 // Declaration of functions
 void write_RAM(unsigned int address, int value);
 int  read_ROM (unsigned int address);
 int  read_RAM (unsigned int address);
+void finish   (void);

@@ -148,12 +148,11 @@ architecture tb of tb_neorv32_ROM_wishbone is
   signal ctrl      : ctrl_bus_t;
   signal csr_we    : std_logic                      :=            '0' ;
   signal csr_addr  : std_ulogic_vector(11 downto 0) := (others => '0');
-  signal csr_wdata : std_ulogic_vector(31 downto 0) := (others => '0');
   signal csr_rdata : std_ulogic_vector(31 downto 0) := (others => '0');
 
 
--- End of test: main.c writes this magic value into the MSCRATCH CSR (0x340) once UART0 is idle (see SIM_END_MAGIC in main.c)
-  constant sim_end_magic_c : std_ulogic_vector(31 downto 0) := x"CAFE0E0D";
+-- End of test: main.c writes to the finisher at this address once UART0 is idle (see finish() in sw/MEM/xbus.c and rtl/MEM/finisher/finisher.vhd)
+  constant sim_finisher : std_ulogic_vector(31 downto 0) := x"B0000000";
 
 -- Logging:
   constant logger : logger_t := get_logger("tb_neorv32_ROM_wishbone_" & to_string(ROM_WIDTH));
@@ -207,7 +206,6 @@ begin
   ctrl      <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.core_complex_gen(0).core_complex_inst.cpu_inst.cpu_control_inst.ctrl_o : ctrl_bus_t >>;
   csr_we    <= ctrl.csr_we;
   csr_addr  <= ctrl.csr_addr;
-  csr_wdata <= ctrl.csr_wdata;
   csr_rdata <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.core_complex_gen(0).core_complex_inst.cpu_inst.cpu_control_inst.csr_rdata_o : std_ulogic_vector(31 downto 0) >>;
 
   main: process
@@ -282,7 +280,7 @@ begin
         check_equal(signed(m_din(ROM_WIDTH-1 downto 0)),checker(y)(x)(ROM_WIDTH-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
-      wait until rising_edge(clk) and csr_we = '1' and csr_addr = x"340" and csr_wdata = sim_end_magic_c; -- stop condition to finish test (MSCRATCH <= SIM_END_MAGIC), see associated main.c
+      wait until rising_edge(clk) and m_ack = '1' and m_adr = sim_finisher; -- stop condition to finish test (write to the finisher), see associated main.c
       done <= true;
       wait;
     else 
@@ -298,7 +296,7 @@ begin
       info(logger, "---------------------------------------------------");
       info(logger, "To load the entire ROM (" & integer'image(2**ROM_DEPTH) & " elements) <" & to_string(to_integer(unsigned(csr_rdata))-1) & "> cycles were required"); 
       info(logger, "---------------------------------------------------");
-      wait until rising_edge(clk) and csr_we = '1' and csr_addr = x"340" and csr_wdata = sim_end_magic_c; -- stop condition to finish test (MSCRATCH <= SIM_END_MAGIC), see associated main.c
+      wait until rising_edge(clk) and m_ack = '1' and m_adr = sim_finisher; -- stop condition to finish test (write to the finisher), see associated main.c
       done <= true;
       wait;
     end if;

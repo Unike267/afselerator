@@ -11,6 +11,10 @@ cp hello_world/Makefile rom-partial/Makefile
 cp hello_world/Makefile rom-all/Makefile 
 cp ../../../sw/MEM/ROM/main.c rom-partial/main.c 
 cp ../../../sw/MEM/ROM/main.c rom-all/main.c 
+cp ../../../sw/MEM/xbus.c rom-partial/
+cp ../../../sw/MEM/xbus.h rom-partial/
+cp ../../../sw/MEM/xbus.c rom-all/
+cp ../../../sw/MEM/xbus.h rom-all/
 cd rom-partial
 sed -i 's|^//#define sim$|#define sim|' main.c
 cd ../rom-all

@@ -14,8 +14,6 @@
 #include "xbus.h"
 
 #define BAUD_RATE 19200
-// Magic value written to the MSCRATCH CSR to tell the testbench that the test is finished (see tb_*.vhd stop condition)
-#define SIM_END_MAGIC 0xCAFE0E0D
 
 // This define allows you to switch between simulation or implementation. 
 // Commented for implementation uncommented for simulation
@@ -95,10 +93,10 @@ int main() {
   }
 
   // Stop condition for the testbench: wait until UART0 has sent everything (so all results are visible
-  // in the simulation console) and then write a magic value into the MSCRATCH CSR. The testbench waits for
-  // this CSR write (no bus error / trap is needed anymore to finish the test).
+  // in the simulation console) and then write to the finisher (0xB0000000). The testbench waits for
+  // the acknowledge of this access (no bus error / trap is needed to finish the test).
   while (neorv32_uart_tx_busy(NEORV32_UART0));
-  neorv32_cpu_csr_write(CSR_MSCRATCH, SIM_END_MAGIC);
+  finish();
 
   #else
   uint32_t wr_lat;
