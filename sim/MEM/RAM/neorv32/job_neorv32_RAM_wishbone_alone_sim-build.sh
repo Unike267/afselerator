@@ -8,6 +8,8 @@ cd ../../../../neorv32/sw/example
 mkdir ram
 cp hello_world/Makefile ram/Makefile
 cp ../../../sw/MEM/RAM/main.c ram/main.c
+cp ../../../sw/MEM/xbus.c ram/
+cp ../../../sw/MEM/xbus.h ram/
 cd ram
 sed -i 's|^//#define sim$|#define sim|' main.c
 cd ../../..

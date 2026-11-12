@@ -11,6 +11,7 @@
 
 #include <neorv32.h>
 #include <string.h>
+#include "xbus.h"
 
 #define BAUD_RATE 19200
 
@@ -76,15 +77,18 @@ int main() {
     // addr   0 (0x00)  -> 236 (0xEC), 27243 (0x6A6B), 4286577543 (0xFF7FFB87)
     // addr 297 (0x129) ->  46 (0x2E), 52099 (0xCB83),    7858042 (0x0077E77A)
     neorv32_uart0_printf("-%u,%u-",visual_checker[i],DATA[visual_checker[i]]);
-      // To make sure that the previous uart printout is finished correctly (this print will only be made halfway)
+      // End marker of the visual check
       if (i == visual_items_check - 1){
         neorv32_uart0_printf("END");
       }
   }
   }
 
-  // Force error to stop the test. It is trying to load an out of range data from address 0x90000FFD (if items are 1024 the maximum address is 0x90000FFC see ROM_wishbone.vhd file) so the err wishbone signal is going to activate.
-    neorv32_cpu_load_unsigned_word(0x90001000);
+  // Stop condition for the testbench: wait until UART0 has sent everything (so all results are visible
+  // in the simulation console) and then write to the finisher (0xB0000000). The testbench waits for
+  // the acknowledge of this access (no bus error / trap is needed to finish the test).
+  while (neorv32_uart_tx_busy(NEORV32_UART0));
+  finish();
   #else
   uint32_t lat;
   // Items to check

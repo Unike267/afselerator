@@ -40,6 +40,10 @@
 \def\RAMh{3}
 \def\RAMv{1}
 \def\RAM{\RAMh,\RAMv}
+%FINISHER
+\def\FINh{3}
+\def\FINv{1}
+\def\FIN{\FINh,\FINv}
 %Background ROM
 \def\BackROMh{4}
 \def\BackROMv{2}
@@ -48,13 +52,17 @@
 \def\BackRAMh{4}
 \def\BackRAMv{2}
 \def\BackRAM{\BackRAMh,\BackRAMv}
+%Background FINISHER
+\def\BackFINh{4}
+\def\BackFINv{2}
+\def\BackFIN{\BackFINh,\BackFINv}
 %Background
-\def\Backh{9.25}
+\def\Backh{13.5}
 \def\Backv{8.25}
 \def\Back{\Backh,\Backv}
 %BackgroundTOT
-\def\BackTOTh{9.75}
-\def\BackTOTv{10.25}
+\def\BackTOTh{14}
+\def\BackTOTv{10.35}
 \def\BackTOT{\BackTOTh,\BackTOTv}
        
 
@@ -82,18 +90,24 @@
 %RAM
 \def\RAMdisplah{5.5+\gaph}
 \def\RAMdisplav{1+\gapv}
+%FINISHER
+\def\FINdisplah{9.75+\gaph}
+\def\FINdisplav{1+\gapv}
 %Background ROM
 \def\BackROMdisplah{0.75+\gaph}
 \def\BackROMdisplav{0.5+\gapv}
 %Background RAM
 \def\BackRAMdisplah{5+\gaph}
 \def\BackRAMdisplav{0.5+\gapv}
+%Background FINISHER
+\def\BackFINdisplah{9.25+\gaph}
+\def\BackFINdisplav{0.5+\gapv}
 %Background
 \def\Backdisplah{0.25+\gaph}
 \def\Backdisplav{0+\gapv}
 %BackgroundTOT
 \def\BackTOTdisplah{0+\gaph}
-\def\BackTOTdisplav{-1.75+\gapv}
+\def\BackTOTdisplav{-1.85+\gapv}
 
 
 %TEXT:
@@ -135,6 +149,11 @@
 \pgfmathparse{(\RAMv)/2}
 \let\RAMhalfv\pgfmathresult
 
+\pgfmathparse{(\FINh)/2}
+\let\FINhalfh\pgfmathresult
+\pgfmathparse{(\FINv)/2}
+\let\FINhalfv\pgfmathresult
+
 %NEORV32
 \draw[fill=yellow!20,rounded corners] (\NEOdisplah,\NEOdisplav) rectangle ++(\NEO);
 \path (center)+(\NEOdisplah+\NEOhalfh,\NEOdisplav+\NEOhalfv+\NEOhalfv/2) node [fontscale=2] (name) {NEORV32}; 
@@ -150,6 +169,9 @@
 %RAM
 \draw[fill=orange!20,rounded corners] (\RAMdisplah,\RAMdisplav) rectangle ++(\RAM);
 \path (center)+(\RAMdisplah+\RAMhalfh,\RAMdisplav+\RAMhalfv) node [fontscale=2] (name) {RAM}; 
+%FINISHER
+\draw[fill=violet!20,rounded corners] (\FINdisplah,\FINdisplav) rectangle ++(\FIN);
+\path (center)+(\FINdisplah+\FINhalfh,\FINdisplav+\FINhalfv) node [fontscale=2] (name) {FINISHER}; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%       ARROWS        %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -158,6 +180,9 @@
 %INTERCON - RAM Wishbone wrapper
 \draw[black,ultra thick,arrows={Stealth-}] (\INTERCONdisplah+\INTERCONh,\INTERCONdisplav+\INTERCONhalfv) to (\RAMdisplah+\RAMhalfh+0.025,\INTERCONdisplav+\INTERCONhalfv);
 \draw[black,ultra thick,arrows={-Stealth}] (\RAMdisplah+\RAMhalfh,\INTERCONdisplav+\INTERCONhalfv) to (\RAMdisplah+\RAMhalfh,\BackRAMdisplav+\BackRAMv);
+%INTERCON - FINISHER Wishbone slave
+\draw[black,ultra thick] (\RAMdisplah+\RAMhalfh-0.025,\INTERCONdisplav+\INTERCONhalfv) to (\FINdisplah+\FINhalfh+0.025,\INTERCONdisplav+\INTERCONhalfv);
+\draw[black,ultra thick,arrows={-Stealth}] (\FINdisplah+\FINhalfh,\INTERCONdisplav+\INTERCONhalfv) to (\FINdisplah+\FINhalfh,\BackFINdisplav+\BackFINv);
 %XBUS-INTERCON
 \draw[black,ultra thick,arrows={Stealth-}] (\INTERCONdisplah+\INTERCONhalfh,\INTERCONdisplav+\INTERCONv) to (\INTERCONdisplah+\INTERCONhalfh,\XBUSdisplav+\XBUShalfv);
 \draw[black,ultra thick,arrows={-Stealth}] (\INTERCONdisplah+\INTERCONhalfh-0.025,\XBUSdisplav+\XBUShalfv) to (\XBUSdisplah,\XBUSdisplav+\XBUShalfv);
@@ -177,19 +202,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%       TEXT        %%%%%%%%%%%%%%%%%%%%%%%%%
 \path (center)+(\ROMdisplah+\ROMhalfh,\BackROMv+\ROMhalfv/2) node (name) [fontscale=-2] {Wishbone Wrapper};
 \path (center)+(\RAMdisplah+\RAMhalfh,\BackRAMv+\RAMhalfv/2) node (name) [fontscale=-2] {Wishbone Wrapper};
+\path (center)+(\FINdisplah+\FINhalfh,\BackFINv+\FINhalfv/2) node (name) [fontscale=-2] {Wishbone Slave};
+\path (center)+(\FINdisplah+\FINhalfh,\BackFINdisplav+0.25) node (name) [fontscale=-2] {0xB0000000};
 \path (center)+(2.75,7) node (name) [fontscale=-2] {entity neorv32\_MEM\_wishbone};
 
 
 
 \begin{pgfonlayer}{background}
-    %BackgroundTOT
-    \path [fill=white!10,opacity=0.5] (\BackTOTdisplah,\BackTOTdisplav) rectangle ++(\BackTOT);
+    %BackgroundTOT (opaque white, it must cover all the blocks, including the DATA IN/OUT clouds)
+    \path [fill=white] (\BackTOTdisplah,\BackTOTdisplav) rectangle ++(\BackTOT);
     %Background
     \path [fill=white!10,rounded corners,opacity=0.5,draw=black!50, loosely dashdotted] (\Backdisplah,\Backdisplav) rectangle ++(\Back);
     %Background ROM
     \path [fill=gray!10,rounded corners,opacity=0.5,draw=black!50, loosely dashdotted] (\BackROMdisplah,\BackROMdisplav) rectangle ++(\BackROM);
     %Background RAM
     \path [fill=gray!10,rounded corners,opacity=0.5,draw=black!50, loosely dashdotted] (\BackRAMdisplah,\BackRAMdisplav) rectangle ++(\BackRAM);
+    %Background FINISHER
+    \path [fill=gray!10,rounded corners,opacity=0.5,draw=black!50, loosely dashdotted] (\BackFINdisplah,\BackFINdisplav) rectangle ++(\BackFIN);
 
 \end{pgfonlayer}
 

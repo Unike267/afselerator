@@ -44,3 +44,11 @@ int read_RAM(unsigned int address)
     read = *data_rd;
     return read;
 }
+
+//Write to the FINISHER through default memory mapped interface i.e XBUS to end the simulation
+void finish(void)
+{
+    int volatile * const data_wr = (int *) FINISHER_ADDR;
+    *data_wr = 0;
+    return;
+}

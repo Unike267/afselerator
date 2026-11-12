@@ -48,6 +48,7 @@ architecture neorv32_MEM_wishbone_rtl of neorv32_MEM_wishbone is
   constant s1_max_addr    : std_logic_vector(31 downto 0) := x"9" & std_logic_vector(to_unsigned(2**ROM_DEPTH-1,26)) & "00";
   constant s2_base_addr   : std_logic_vector(31 downto 0) := x"A0000000";
   constant s2_max_addr    : std_logic_vector(31 downto 0) := x"A" & std_logic_vector(to_unsigned(2**RAM_DEPTH-1,26)) & "00";
+  constant s3_addr        : std_logic_vector(31 downto 0) := x"B0000000"; -- finisher (single address, see finisher.vhd)
 
 -- Declaration of wishbone signals
   signal wb_m_we_o    : std_logic                      :=            '0' ;
@@ -58,10 +59,13 @@ architecture neorv32_MEM_wishbone_rtl of neorv32_MEM_wishbone is
 
   signal wb_s1_stb_i  : std_logic                      :=            '0' ;
   signal wb_s2_stb_i  : std_logic                      :=            '0' ;
+  signal wb_s3_stb_i  : std_logic                      :=            '0' ;
   signal wb_s1_ack_o  : std_logic                      :=            '0' ;
   signal wb_s2_ack_o  : std_logic                      :=            '0' ;
+  signal wb_s3_ack_o  : std_logic                      :=            '0' ;
   signal wb_s1_err_o  : std_logic                      :=            '0' ;
   signal wb_s2_err_o  : std_logic                      :=            '0' ;
+  signal wb_s3_err_o  : std_logic                      :=            '0' ;
 
   signal wb_m_adr_o   : std_logic_vector(31 downto 0)  := (others => '0');
   signal wb_m_dat_i   : std_logic_vector(31 downto 0)  := (others => '0');
@@ -78,7 +82,7 @@ architecture neorv32_MEM_wishbone_rtl of neorv32_MEM_wishbone is
 
 -- Declaration of intermediate signals 
   -- ACMP = ADDRESS COMPARATOR 
-  signal ACMP         : std_logic_vector(1 downto 0)   := (others => '0');
+  signal ACMP         : std_logic_vector(2 downto 0)   := (others => '0');
 
 begin
 
@@ -123,6 +127,22 @@ begin
                                     ACK_o         => wb_s2_ack_o,
                                     CYC_i         => wb_m_cyc_o,
                                     ERR_o         => wb_s2_err_o,
+                                    STALL_o       => open
+                                    );
+
+-- Finisher Wishbone instantiation (end of simulation, see sw/MEM/xbus.c finish())
+  finisher_0 :
+  entity MEM.finisher
+                         port    map(
+                                    CLK_i         => CLK_i,
+                                    RSTN_i        => RSTN_i,
+                                    ADDR_i        => wb_m_adr_o,
+                                    WE_i          => wb_m_we_o,
+                                    SEL_i         => wb_m_sel_o,
+                                    STB_i         => wb_s3_stb_i,
+                                    ACK_o         => wb_s3_ack_o,
+                                    CYC_i         => wb_m_cyc_o,
+                                    ERR_o         => wb_s3_err_o,
                                     STALL_o       => open
                                     );
 
@@ -179,23 +199,25 @@ begin
   wb_m_dat_i_u <=  To_StdULogicVector(wb_m_dat_i);
 
 -- Mange acknowledge signal
-  wb_m_ack_i  <= wb_s1_ack_o or wb_s2_ack_o;
+  wb_m_ack_i  <= wb_s1_ack_o or wb_s2_ack_o or wb_s3_ack_o;
 
 -- Mange error signal
-  wb_m_err_i  <= wb_s1_err_o or wb_s2_err_o;
+  wb_m_err_i  <= wb_s1_err_o or wb_s2_err_o or wb_s3_err_o;
 
 -- Manage ADDRESS COMPARATOR signal
   ACMP(0) <= '1' when (wb_m_adr_o >= s1_base_addr) and (wb_m_adr_o <= s1_max_addr) else '0';
   ACMP(1) <= '1' when (wb_m_adr_o >= s2_base_addr) and (wb_m_adr_o <= s2_max_addr) else '0';
+  ACMP(2) <= '1' when (wb_m_adr_o  = s3_addr) else '0';
   
 -- Manage stb signal
   wb_s1_stb_i <= wb_m_cyc_o and wb_m_stb_o and ACMP(0);
   wb_s2_stb_i <= wb_m_cyc_o and wb_m_stb_o and ACMP(1);
+  wb_s3_stb_i <= wb_m_cyc_o and wb_m_stb_o and ACMP(2);
 
 -- Manage wb master input data signal
   with ACMP select
-  wb_m_dat_i <= wb_s1_dat_o     when   "01",
-                wb_s2_dat_o     when   "10",
+  wb_m_dat_i <= wb_s1_dat_o     when  "001",
+                wb_s2_dat_o     when  "010",
                 (others => '0') when others;
 
 end architecture;

@@ -143,7 +143,6 @@ architecture tb of tb_neorv32_ROM_wishbone is
   signal m_stb     : std_logic                      :=            '0' ;
   signal m_ack     : std_logic                      :=            '0' ;
   signal m_cyc     : std_logic                      :=            '0' ;
-  signal m_err     : std_logic                      :=            '0' ;
   signal m_din     : std_ulogic_vector(31 downto 0) := (others => '0');
   signal m_adr     : std_ulogic_vector(31 downto 0) := (others => '0');
   signal ctrl      : ctrl_bus_t;
@@ -151,6 +150,9 @@ architecture tb of tb_neorv32_ROM_wishbone is
   signal csr_addr  : std_ulogic_vector(11 downto 0) := (others => '0');
   signal csr_rdata : std_ulogic_vector(31 downto 0) := (others => '0');
 
+
+-- End of test: main.c writes to the finisher at this address once UART0 is idle (see finish() in sw/MEM/xbus.c and rtl/MEM/finisher/finisher.vhd)
+  constant sim_finisher : std_ulogic_vector(31 downto 0) := x"B0000000";
 
 -- Logging:
   constant logger : logger_t := get_logger("tb_neorv32_ROM_wishbone_" & to_string(ROM_WIDTH));
@@ -197,7 +199,6 @@ begin
   m_stb <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.xbus_stb_o : std_logic >>;
   m_ack <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.xbus_ack_i : std_logic >>;
   m_cyc <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.xbus_cyc_o : std_logic >>;
-  m_err <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.xbus_err_i : std_logic >>;
   m_din <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.xbus_dat_i : std_ulogic_vector >>;
   m_adr <= << signal .tb_neorv32_ROM_wishbone.uut.neorv32_top_inst.xbus_adr_o : std_ulogic_vector >>;
 
@@ -279,7 +280,7 @@ begin
         check_equal(signed(m_din(ROM_WIDTH-1 downto 0)),checker(y)(x)(ROM_WIDTH-1 downto 0),"This is a failure!");
       end loop;
       info(logger,   "---------------------------------------------------");
-      wait until m_err = '1' and rising_edge(clk); -- stop condition to finish test, see associated main.c
+      wait until rising_edge(clk) and m_ack = '1' and m_adr = sim_finisher; -- stop condition to finish test (write to the finisher), see associated main.c
       done <= true;
       wait;
     else 
@@ -295,7 +296,7 @@ begin
       info(logger, "---------------------------------------------------");
       info(logger, "To load the entire ROM (" & integer'image(2**ROM_DEPTH) & " elements) <" & to_string(to_integer(unsigned(csr_rdata))-1) & "> cycles were required"); 
       info(logger, "---------------------------------------------------");
-      wait until m_err = '1' and rising_edge(clk); -- stop condition to finish test, see associated main.c
+      wait until rising_edge(clk) and m_ack = '1' and m_adr = sim_finisher; -- stop condition to finish test (write to the finisher), see associated main.c
       done <= true;
       wait;
     end if;
